@@ -1,2 +1,4 @@
-# reward learning
+# Reward learning task (LUX)
+
+
 

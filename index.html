@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reward Learning Task</title>
+    <script src="lib/vendors/jspsych-6.1.0/jspsych.js"></script>
+    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+
+    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+    <link href="lib/vendors/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css">
+
+    <!-- D3js used to read csv schedule files -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <!-- jQuery required for Pavlovia plugins -->
+    <script src="lib/vendors/jquery-2.2.0.min.js"></script>
+
+    <!--script type="text/javascript" src="lib/jspsych-pavlovia-3.2.5.js"></script-->
+    <script type="text/javascript" src="jspsych-pavlovia-2020.3.js"></script> <!-- add the complete callback plugin -->
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 100px;
+        width: 1000px;
+    }
+    .box {
+        color: white;
+        height: 100px;
+        width: 100px;
+
+        font-size: larger;
+        font-weight: bold;
+
+        text-align: center;
+        vertical-align: center;
+        line-height: 100px;
+        margin: 20px;
+    }
+    .box1 {
+        background-color: deepskyblue;
+    }
+    .box2 {
+        background-color: green;
+    }
+    .selected {
+        margin: 10px;
+        border: 10px solid gray;
+    }
+    .highlight {
+        margin: 20px;
+        box-shadow: 0 0 0 20px yellow;
+    }
+    .selected.highlight {
+        margin: 10px;
+        box-shadow: 0 0 0 10px yellow;
+    }
+    .reward_bar_border {
+        position: relative;
+        top: 50px;
+        margin: 20px;
+        width: 100%;
+        height: 20px;
+        border: 1px solid gray;
+        background-color: lightcyan;
+    }
+    .reward_bar {
+        height: 20px;
+        background-color: red;
+        min-width: 1px;
+    }
+
+</style>
+</head>
+<body></body>
+<script>
+
+    // load schedules
+
+    let schedule_stable;
+    let schedule_stochastic;
+    let schedule_volatile;
+    async function getSchedules() {
+        schedule_stable = await d3.csv('schedules/Stable.csv');
+        schedule_stochastic = await d3.csv('schedules/Stochastic.csv');
+        schedule_volatile = await d3.csv('schedules/Volatile.csv');
+        setTimeout(build_and_run_experiment, 1000);  // wait a second so that files can load before running experiment
+    }
+    getSchedules();
+
+    function build_and_run_experiment() {
+
+        let runat_pavlovia = false;
+
+        /* Enter subject id */
+        var subject_id = jsPsych.data.getURLVariable('participantID')
+        jsPsych.data.addProperties({subject: subject_id});
+
+        // enter full screen
+        var welcome = {
+            type: "fullscreen",
+            message: "Now you are entering the full screen mode.<br>",
+            button_label: "Click here to proceed.",
+            delay_after: 500
+        }
+
+        // box values
+        let box_vals = [
+            {left: 35, right: 15, correct: 'left'},
+            {left: 18, right: 17, correct: 'right'}
+        ]
+
+        // randomize order of stable, stochastic, and volatile trials
+        switch(Math.floor(Math.random() * 6)) {
+            case 0:
+                box_vals = [].concat(schedule_stable, schedule_stochastic, schedule_volatile);
+                break;
+            case 1:
+                box_vals = [].concat(schedule_stable, schedule_volatile, schedule_stochastic);
+                break;
+            case 2:
+                box_vals = [].concat(schedule_stochastic, schedule_volatile, schedule_stable);
+                break;
+            case 3:
+                box_vals = [].concat(schedule_stochastic, schedule_stable, schedule_volatile);
+                break;
+            case 4:
+                box_vals = [].concat(schedule_volatile, schedule_stable, schedule_stochastic);
+                break;
+            case 5:
+                box_vals = [].concat(schedule_volatile, schedule_stochastic, schedule_stable);
+                break;
+        }
+
+        const possible_stable = 1412;
+        const possible_volatile = 1389;
+        const possible_stochastic = 1454;
+        const possible_total =  possible_volatile + possible_stable + possible_stochastic;
+
+        let timeline = [];
+
+        /* init connection with pavlovia.org */
+        let pavlovia_init = {
+            type: "pavlovia",
+            command: "init"
+        };
+        if (runat_pavlovia) {
+            timeline.push(pavlovia_init);
+        }
+
+        timeline.push(welcome);
+
+        let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
+            let valLeft;
+            let valRight;
+            let classLeft;
+            let classRight;
+            if(opt1Left === "1"){
+                valLeft = val1;
+                valRight = val2;
+                classLeft = 'box1';
+                classRight = 'box2';
+            } else {
+                valLeft = val2;
+                valRight = val1;
+                classLeft = 'box2';
+                classRight = 'box1';
+            }
+
+            let string_parts = []
+            string_parts.push('<div class="container"><div class="' + classLeft + ' box');
+            if (selected === 'left') string_parts.push(' selected ');
+            if (feedback === 'left') string_parts.push(' highlight ');
+            string_parts.push('">' + valLeft + '</div><div class="' + classRight + ' box');
+            if (selected === 'right') string_parts.push(' selected ');
+            if (feedback === 'right') string_parts.push(' highlight ');
+            string_parts.push('">' + valRight + '</div></div>')
+            string_parts.push('<div class="reward_bar_border"><div class="reward_bar" style="width:');
+            string_parts.push(reward_total / possible_total * 4);
+            string_parts.push('%;"></div></div>');
+            return string_parts.join('')
+        }
+
+        /* a trial consists of three steps:
+            1. display boxes with values (ends with keypress)
+            2. display boxes with chosen option indicated (gray border) for 1 s
+            3. display boxes with correct side highlighted for 1 s
+        */
+
+        var trial = [
+            {
+                type: 'html-keyboard-response',
+                stimulus: function() {
+                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                    let reward_total = jsPsych.data.get().select('reward').sum();
+                    return display_boxes(val1, val2, opt1Left, reward_total);
+                },
+                choices: [37, 39],
+                on_finish: function (data) {
+                    let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
+                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                    if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                        // right response should be rewarded
+                        data.rewarded_side = 'right';
+                        data.correct = data.key_press === 39;
+                    } else {
+                        // left response should be rewarded
+                        data.rewarded_side = 'left';
+                        data.correct = data.key_press === 37;
+                    }
+
+                    // Store the reward
+                    if(data.correct) {
+                        if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                            data.reward = parseInt(val1);
+                        } else {
+                            data.reward = parseInt(val2);
+                        }
+                    } else {
+                        data.reward = 0;
+                    }
+
+                    if (data.key_press === 37) {
+                        data.selected_side = 'left';
+                    } else {
+                        data.selected_side = 'right';
+                    }
+                }
+            },
+            {
+                type: 'html-keyboard-response',
+                stimulus: function () {
+                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                    let d = jsPsych.data.get().last(1).values()[0];
+                    let reward_total = jsPsych.data.get().select('reward').sum();
+                    return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side);
+                },
+                choices: jsPsych.NO_KEYS,
+                trial_duration: 1000
+            },
+            {
+                type: 'html-keyboard-response',
+                stimulus: function () {
+                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                    let d = jsPsych.data.get().last(2).values()[0];
+                    let reward_total = jsPsych.data.get().select('reward').sum();
+                    return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side, d.rewarded_side)
+                },
+                choices: jsPsych.NO_KEYS,
+                trial_duration: 1000
+            },
+        ]
+
+        // Manipulation check
+        var manipulation_check_procedure = {
+            timeline: [
+                {
+                    type: 'survey-multi-choice',
+                    questions: [
+                        {
+                            prompt: "Which box do you think paid better in the past few trials?",
+                            name: 'BetterBox',
+                            options: ['blue', 'green'],
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 'survey-multi-choice',
+                    questions: [
+                        {
+                            prompt: "Did the better-paying side switch since last time you answered this question?",
+                            name: 'BetterBoxSwitched',
+                            options: ['Yes', 'No'],
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    type: 'html-slider-response',
+                    stimulus: "<p>Based on the past few trials, what number do you think will come up in the next trial?</p>",
+                    labels: ['0', '25'],
+                    min: 0,
+                    max: 25,
+                    start: 0,
+                    step: 1,
+                    require_movement: true,
+                    prompt: '<p>Move the slider to select a value</p>',
+                },
+                {
+                    type: 'survey-multi-choice',
+                    questions: [
+                        {
+                            prompt: "How sure are you that your guess is around the actual number?",
+                            name: 'Confidence',
+                            options: ['I have no idea at all', 'Somewhat confident', 'Moderately confident', 'Mostly confident'],
+                            required: true
+                        }
+                    ]
+                },
+            ]
+        }
+
+
+        // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
+        var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175, 190, 210];
+
+        for (let i=1; i < blocks.length; i++){
+            timeline.push({
+                timeline: trial,
+                timeline_variables: box_vals.slice(blocks[i-1], blocks[i])
+            });
+            timeline.push(manipulation_check_procedure);
+
+            if(blocks[i] % 70 === 0){
+                // display motivational slide
+            }
+        }
+
+        /* finish connection with pavlovia.org */
+        var pavlovia_finish = {
+            type: "pavlovia",
+            command: "finish",
+            dataFilter: function (data) {
+                // Printing the data received from jsPsych.data.get().csv(); a CSV data structure
+                console.log(data);
+                // You can also access the data directly, for instance getting it as JSON
+                console.log(jsPsych.data.get().json());
+                // Return whatever data you'd like to store
+                return data;
+            },
+            // Thomas Pronk; call this function when we're done with the experiment and data reception has been confirmed by Pavlovia
+            completedCallback: function () {
+                alert('data successfully submitted!');
+            }
+        };
+
+        if (runat_pavlovia) {
+            timeline.push(pavlovia_finish);
+        }
+
+        // Extract parameter from the url by parameter name
+        // Use Regex to match the param.
+        function getUrlParam(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            return results == null ? null : results[1];
+        }
+
+        // link to the next part of the study
+        jsPsych.init({
+            timeline: timeline,
+            on_finish: function () {
+
+            }
+        });
+    }
+</script>
+</html>
