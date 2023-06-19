@@ -6,7 +6,8 @@
     <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-image-keyboard-response.js"></script>
     <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
-    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+<!--    <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>-->
+    <script src="jspsych-html-slider-response-with-number.js"></script>
 
     <script src="lib/vendors/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
     <link href="lib/vendors/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css">
@@ -60,7 +61,7 @@
     }
     .reward_bar_border {
         position: relative;
-        top: 50px;
+        top: 60px;
         margin: 20px;
         width: 100%;
         height: 20px;
@@ -72,11 +73,36 @@
         background-color: red;
         min-width: 1px;
     }
+    .reward_points {
+        position: relative;
+        top: 40px;
+        font-weight: bold;
+        font-size: larger;
+    }
+    .reward_points:before {
+        font-weight: bold;
+        font-size: larger;
+        content: "Points: "
+    }
+    .timeout-image {
+        width: 50%;
+    }
 
 </style>
 </head>
 <body></body>
 <script>
+
+    // experiment constants
+    const runat_pavlovia = true;  // set to false for running locally, true for running at Pavlovia
+    const timeout_penalty = -10;  // amount of "reward" for a timeout.  Make negative to deduct points from total.
+    const timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeout mode is deactivated.
+
+    const response_duration = 2000; // duration (ms) for a response before timeout, if timeout is enabled
+    const warning_duration = 2000;  // duration (ms) of warning icon after a timeout
+    const display_choice_duration = 1000;  // duration (ms) to display choice before showing feedback
+    const feedback_duration = 1000;  // duration (ms) to display choice together with rewarded side
+
 
     // load schedules
 
@@ -93,8 +119,6 @@
 
     function build_and_run_experiment() {
 
-        let runat_pavlovia = false;
-
         /* Enter subject id */
         var subject_id = jsPsych.data.getURLVariable('participantID')
         jsPsych.data.addProperties({subject: subject_id});
@@ -107,13 +131,8 @@
             delay_after: 500
         }
 
-        // box values
-        let box_vals = [
-            {left: 35, right: 15, correct: 'left'},
-            {left: 18, right: 17, correct: 'right'}
-        ]
 
-        // randomize order of stable, stochastic, and volatile trials
+        // randomize order of stable, stochastic, and volatile blocks
         switch(Math.floor(Math.random() * 6)) {
             case 0:
                 box_vals = [].concat(schedule_stable, schedule_stochastic, schedule_volatile);
@@ -151,7 +170,7 @@
             timeline.push(pavlovia_init);
         }
 
-        timeline.push(welcome);
+        // timeline.push(welcome);
 
         let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
             let valLeft;
@@ -177,9 +196,10 @@
             string_parts.push('">' + valLeft + '</div><div class="' + classRight + ' box');
             if (selected === 'right') string_parts.push(' selected ');
             if (feedback === 'right') string_parts.push(' highlight ');
-            string_parts.push('">' + valRight + '</div></div>')
+            string_parts.push('">' + valRight + '</div></div>');
+            string_parts.push('<div class="reward_points">' + reward_total + '</div>');
             string_parts.push('<div class="reward_bar_border"><div class="reward_bar" style="width:');
-            string_parts.push(reward_total / possible_total * 4);
+            string_parts.push(reward_total / possible_total * 100);
             string_parts.push('%;"></div></div>');
             return string_parts.join('')
         }
@@ -190,8 +210,195 @@
             3. display boxes with correct side highlighted for 1 s
         */
 
-        var trial = [
-            {
+        let step1;
+        if(timeout_mode === 'once') {
+            // timeout once, then wait for response indefinitely
+            step1 = {
+                timeline: [
+                    {
+                        type: 'html-keyboard-response',
+                        stimulus: function() {
+                            let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                            let val1 = jsPsych.timelineVariable('magOpt1', true);
+                            let val2 = jsPsych.timelineVariable('magOpt2', true);
+                            let reward_total = jsPsych.data.get().select('reward').sum();
+                            return display_boxes(val1, val2, opt1Left, reward_total);
+                        },
+                        choices: [37, 39],
+                        on_finish: function (data) {
+                            let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
+                            let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                            let val1 = jsPsych.timelineVariable('magOpt1', true);
+                            let val2 = jsPsych.timelineVariable('magOpt2', true);
+                            if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                                // right response should be rewarded
+                                data.rewarded_side = 'right';
+                                data.correct = data.key_press === 39;
+                            } else {
+                                // left response should be rewarded
+                                data.rewarded_side = 'left';
+                                data.correct = data.key_press === 37;
+                            }
+
+                            // Store the reward
+                            if(data.correct) {
+                                if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                                    data.reward = parseInt(val1);
+                                } else {
+                                    data.reward = parseInt(val2);
+                                }
+                            } else {
+                                data.reward = 0;
+                            }
+
+                            if (data.key_press === 37) {
+                                data.selected_side = 'left';
+                            } else {
+                                data.selected_side = 'right';
+                            }
+                        },
+                        trial_duration: response_duration
+                    },
+                    {
+                        timeline: [
+                            // display warning icon and apply penalty to points
+                            {
+                                type: 'html-keyboard-response',
+                                stimulus: '<img class="timeout-image" alt="warning icon" src="images/timeout2.jpg">',
+                                choices: jsPsych.NO_KEYS,
+                                trial_duration: warning_duration,
+                                on_finish: function(data) {
+                                    data.reward = timeout_penalty;
+                                }
+                            },
+
+                            // standard response, but with no timeout
+                            {
+                                type: 'html-keyboard-response',
+                                stimulus: function() {
+                                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                                    let reward_total = jsPsych.data.get().select('reward').sum();
+                                    return display_boxes(val1, val2, opt1Left, reward_total);
+                                },
+                                choices: [37, 39],
+                                on_finish: function (data) {
+                                    let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
+                                    let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                                    let val1 = jsPsych.timelineVariable('magOpt1', true);
+                                    let val2 = jsPsych.timelineVariable('magOpt2', true);
+                                    if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                                        // right response should be rewarded
+                                        data.rewarded_side = 'right';
+                                        data.correct = data.key_press === 39;
+                                    } else {
+                                        // left response should be rewarded
+                                        data.rewarded_side = 'left';
+                                        data.correct = data.key_press === 37;
+                                    }
+
+                                    // Store the reward
+                                    if(data.correct) {
+                                        if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                                            data.reward = parseInt(val1);
+                                        } else {
+                                            data.reward = parseInt(val2);
+                                        }
+                                    } else {
+                                        data.reward = 0;
+                                    }
+
+                                    if (data.key_press === 37) {
+                                        data.selected_side = 'left';
+                                    } else {
+                                        data.selected_side = 'right';
+                                    }
+                                }
+                            },
+                        ],
+                        conditional_function: function() {
+                            // only display feedback if there was no response in the previous trial
+                            return !jsPsych.data.get().last(1).values()[0].key_press
+                        }
+                    }
+                ]
+            }
+
+        } else if(timeout_mode === 'infinite') {
+            // timeout with looping (timeout is repeatedly applied if no response)
+            step1 = {
+                timeline: [
+                    {
+                        type: 'html-keyboard-response',
+                        stimulus: function() {
+                            let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                            let val1 = jsPsych.timelineVariable('magOpt1', true);
+                            let val2 = jsPsych.timelineVariable('magOpt2', true);
+                            let reward_total = jsPsych.data.get().select('reward').sum();
+                            return display_boxes(val1, val2, opt1Left, reward_total);
+                        },
+                        choices: [37, 39],
+                        on_finish: function (data) {
+                            let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
+                            let opt1Left = jsPsych.timelineVariable('opt1Left', true);
+                            let val1 = jsPsych.timelineVariable('magOpt1', true);
+                            let val2 = jsPsych.timelineVariable('magOpt2', true);
+                            if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                                // right response should be rewarded
+                                data.rewarded_side = 'right';
+                                data.correct = data.key_press === 39;
+                            } else {
+                                // left response should be rewarded
+                                data.rewarded_side = 'left';
+                                data.correct = data.key_press === 37;
+                            }
+
+                            // Store the reward
+                            if(data.correct) {
+                                if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                                    data.reward = parseInt(val1);
+                                } else {
+                                    data.reward = parseInt(val2);
+                                }
+                            } else {
+                                data.reward = 0;
+                            }
+
+                            if (data.key_press === 37) {
+                                data.selected_side = 'left';
+                            } else {
+                                data.selected_side = 'right';
+                            }
+                        },
+                        trial_duration: response_duration
+                    },
+                    {
+                        timeline: [
+                            {
+                                type: 'html-keyboard-response',
+                                stimulus: '<img class="timeout-image" alt="warning icon" src="images/timeout2.jpg">',
+                                choices: jsPsych.NO_KEYS,
+                                trial_duration: warning_duration,
+                                on_finish: function(data) {
+                                    data.reward = timeout_penalty;
+                                }
+                            }
+                        ],
+                        conditional_function: function() {
+                            // only display feedback if there was no response in the previous trial
+                            return !jsPsych.data.get().last(1).values()[0].key_press
+                        }
+                    }
+                ],
+                loop_function: function(data) {
+                    // loop if there was no key press
+                    return !data.values()[0].key_press;
+                }
+            }
+        } else {
+            // no timeout mode or looping
+            step1 =             {
                 type: 'html-keyboard-response',
                 stimulus: function() {
                     let opt1Left = jsPsych.timelineVariable('opt1Left', true);
@@ -233,7 +440,16 @@
                         data.selected_side = 'right';
                     }
                 }
-            },
+            }
+
+        }
+
+
+        var trial = [
+            // show prompt and collect response.  Handle timeout appropriately, depending on settings.
+            step1,
+
+            // display response without indicating which side is rewarded
             {
                 type: 'html-keyboard-response',
                 stimulus: function () {
@@ -241,12 +457,17 @@
                     let val1 = jsPsych.timelineVariable('magOpt1', true);
                     let val2 = jsPsych.timelineVariable('magOpt2', true);
                     let d = jsPsych.data.get().last(1).values()[0];
+
+                    // don't include the most recent reward yet
                     let reward_total = jsPsych.data.get().select('reward').sum();
-                    return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side);
+                    let current_reward = jsPsych.data.get().last(1).values()[0].reward;
+                    return display_boxes(val1, val2, opt1Left, reward_total - current_reward, d.selected_side);
                 },
                 choices: jsPsych.NO_KEYS,
-                trial_duration: 1000
+                trial_duration: display_choice_duration
             },
+
+            // display response and rewarded side, along with updated points total
             {
                 type: 'html-keyboard-response',
                 stimulus: function () {
@@ -258,7 +479,7 @@
                     return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side, d.rewarded_side)
                 },
                 choices: jsPsych.NO_KEYS,
-                trial_duration: 1000
+                trial_duration: feedback_duration
             },
         ]
 
@@ -290,13 +511,14 @@
                 {
                     type: 'html-slider-response',
                     stimulus: "<p>Based on the past few trials, what number do you think will come up in the next trial?</p>",
-                    labels: ['0', '25'],
+                    labels: ['0', '30'],
                     min: 0,
-                    max: 25,
-                    start: 0,
+                    max: 30,
+                    slider_start: 0,
                     step: 1,
                     require_movement: true,
                     prompt: '<p>Move the slider to select a value</p>',
+                    slider_number: true,
                 },
                 {
                     type: 'survey-multi-choice',
