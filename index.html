@@ -161,6 +161,23 @@
         const possible_volatile = 1389;
         const possible_stochastic = 1454;
         const possible_total =  possible_volatile + possible_stable + possible_stochastic;
+        
+        /* preload images */
+        var imageExt = 'images/'
+        
+        var images = [
+            "instructions/Slide1.png",
+            "instructions/Slide1.png",
+            "instructions/Slide1.png",
+            "instructions/Slide1.png",
+            "instructions/Slide1.png",
+            "instructions/Slide1.png",
+            ]
+            
+        var preload_images=[];
+        for (var k = 0; k < images.length; k++) {
+            preload_images.push(imageExt+images[k]);
+        };
 
         let timeline = [];
 
