@@ -493,9 +493,9 @@
                     type: 'survey-multi-choice',
                     questions: [
                         {
-                            prompt: "Which box do you think paid better in the past few trials?",
+                            prompt: "Which box earns you more points?",
                             name: 'BetterBox',
-                            options: ['blue', 'green'],
+                            options: ["blue", "green", "I don't know"],
                             required: true
                         }
                     ]
@@ -504,16 +504,16 @@
                     type: 'survey-multi-choice',
                     questions: [
                         {
-                            prompt: "Did the better-paying side switch since last time you answered this question?",
+                            prompt: "Last time you said the [blank] box earns you more points. Did it switch?",
                             name: 'BetterBoxSwitched',
-                            options: ['Yes', 'No'],
+                            options: ["Yes", "No", "I don't know"],
                             required: true
                         }
                     ]
                 },
                 {
                     type: 'html-slider-response',
-                    stimulus: "<p>Based on the past few trials, what number do you think will come up in the next trial?</p>",
+                    stimulus: "<p>Based on what you see, what number will you get from the box that earns you point?</p>",
                     labels: ['0', '30'],
                     min: 0,
                     max: 30,
