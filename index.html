@@ -166,12 +166,25 @@
         var imageExt = 'images/'
         
         var images = [
-            "instructions/Slide1.png",
-            "instructions/Slide1.png",
-            "instructions/Slide1.png",
-            "instructions/Slide1.png",
-            "instructions/Slide1.png",
-            "instructions/Slide1.png",
+            "instructions/Slide2.png",
+            "instructions/Slide3.png",
+            "instructions/Slide4.png",
+            "instructions/Slide4.png",
+            "instructions/Slide5.png",
+            "instructions/Slide6.png",
+            "instructions/Slide7.png",
+            "instructions/Slide8.png",
+            "instructions/Slide9.png",
+            "instructions/Slide10.png",
+            "instructions/Slide11.png",
+            "instructions/Slide12.png",
+            "instructions/Slide13.png",
+            "instructions/Slide14.png",
+            "instructions/Slide15.png",
+            "instructions/Slide16.png",
+            "instructions/Slide17.png",
+            "instructions/Slide18.png",
+            "timeout.jpg"
             ]
             
         var preload_images=[];
@@ -189,8 +202,42 @@
         if (runat_pavlovia) {
             timeline.push(pavlovia_init);
         }
-
-        // timeline.push(welcome);
+        
+        // enter full screen
+        var welcome = {
+            type: "fullscreen",
+            message: "Now you are entering the full screen mode.<br>",
+            button_label: "Click here to proceed.",
+            delay_after: 500
+        }
+        
+        timeline.push(welcome);
+        
+        let inst = {
+        type: 'instructions',
+        pages: [
+            'Welcome to this game! Please click next or press the right arrow key to begin.',
+            '<img src="images/instructions/Slide2.png"></img>',
+            '<img src="images/instructions/Slide3.png"></img>',
+            '<img src="images/instructions/Slide4.png"></img>',
+            '<img src="images/instructions/Slide5.png"></img>',
+            '<img src="images/instructions/Slide6.png"></img>',
+            '<img src="images/instructions/Slide7.png"></img>',
+            '<img src="images/instructions/Slide8.png"></img>',
+            '<img src="images/instructions/Slide9.png"></img>',
+            '<img src="images/instructions/Slide10.png"></img>',
+            '<img src="images/instructions/Slide11.png"></img>',
+            '<img src="images/instructions/Slide12.png"></img>',
+            '<img src="images/instructions/Slide13.png"></img>',
+            '<img src="images/instructions/Slide14.png"></img>',
+            '<img src="images/instructions/Slide15.png"></img>',
+            '<img src="images/instructions/Slide16.png"></img>',
+            '<img src="images/instructions/Slide17.png"></img>',
+            '<img src="images/instructions/Slide18.png"></img>'],
+            show_clickable_nav: true
+        };
+        
+        timeline.push(inst);
 
         let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
             let valLeft;
@@ -606,6 +653,7 @@
         // link to the next part of the study
         jsPsych.init({
             timeline: timeline,
+            preload_images: preload_images,
             on_finish: function () {
 
             }
