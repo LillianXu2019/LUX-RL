@@ -20,23 +20,23 @@
 	        type: 'instructions',
 	        pages: [
 	            'Welcome to this game! Please click next or press the right arrow key to begin.',
-	            '<img src= ' + repo_site + "images/instructions/Slide2.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide3.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide4.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide5.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide6.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide7.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide8.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide9.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide10.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide11.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide12.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide13.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide14.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide15.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide16.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide17.png"></img>',
-	            '<img src= ' + repo_site + "images/instructions/Slide18.png"></img>'],
+	            '<img src= ' + repo_site + '"images/instructions/Slide2.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide3.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide4.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide5.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide6.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide7.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide8.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide9.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide10.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide11.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide12.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide13.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide14.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide15.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide16.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide17.png"></img>',
+	            '<img src= ' + repo_site + '"images/instructions/Slide18.png"></img>'],
 	            show_clickable_nav: true
 	        };
 	        
@@ -134,7 +134,7 @@
 	                            // display warning icon and apply penalty to points
 	                            {
 	                                type: 'html-keyboard-response',
-	                                stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + "images/timeout2.jpg">',
+	                                stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout2.jpg">',
 	                                choices: jsPsych.NO_KEYS,
 	                                trial_duration: warning_duration,
 	                                on_finish: function(data) {
@@ -247,7 +247,7 @@
 	                        timeline: [
 	                            {
 	                                type: 'html-keyboard-response',
-	                                stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + "images/timeout2.jpg">',
+	                                stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout2.jpg">',
 	                                choices: jsPsych.NO_KEYS,
 	                                trial_duration: warning_duration,
 	                                on_finish: function(data) {
