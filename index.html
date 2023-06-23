@@ -19,6 +19,7 @@
     <script src="lib/vendors/jquery-2.2.0.min.js"></script>
     <!--script src="https://code.jquery.com/jquery-2.2.0.min.js"/-->
 
+    <!-- UNCOMMENT the following line to enable Pavlovia -->
     <!--script type="text/javascript" src="jspsych-pavlovia-2020.3.js"></script-->
 <style>
     .container {
@@ -94,6 +95,7 @@
 <script>
 
     // experiment constants
+    // Set the following to true to enable Pavlovia
     const runat_pavlovia = false;  // set to false for running locally, true for running at Pavlovia
     const timeout_penalty = -10;  // amount of "reward" for a timeout.  Make negative to deduct points from total.
     const timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeout mode is deactivated.
