@@ -3,16 +3,49 @@
 	// define the site that hosts stimuli images
 	// usually https://<your-github-username>.github.io/<your-experiment-name>/
 	var repo_site = "https://LillianXu2019.github.io/LUX-RL/";
+	
+	/* preload images */
+            var imageExt = repo_site + 'images/'
+            
+            var images = [
+                "instructions/Slide2.png",
+                "instructions/Slide3.png",
+                "instructions/Slide4.png",
+                "instructions/Slide4.png",
+                "instructions/Slide5.png",
+                "instructions/Slide6.png",
+                "instructions/Slide7.png",
+                "instructions/Slide8.png",
+                "instructions/Slide9.png",
+                "instructions/Slide10.png",
+                "instructions/Slide11.png",
+                "instructions/Slide12.png",
+                "instructions/Slide13.png",
+                "instructions/Slide14.png",
+                "instructions/Slide15.png",
+                "instructions/Slide16.png",
+                "instructions/Slide17.png",
+                "instructions/Slide18.png",
+                "timeout.jpg"
+                ]
+                
+            var preload_images=[];
+            for (var k = 0; k < images.length; k++) {
+                preload_images.push(imageExt+images[k]);
+            };
+            
+            let timeline = [];
 
-	let timeline = [];
-
-	// enter full screen
-	        var welcome = {
+            /* Enter subject id */
+            var subject_id = jsPsych.data.getURLVariable('participantID')
+            jsPsych.data.addProperties({subject: subject_id});
+            // enter full screen
+            var welcome = {
 	            type: "fullscreen",
 	            message: "Now you are entering the full screen mode.<br>",
 	            button_label: "Click here to proceed.",
 	            delay_after: 500
-	        }
+            }
 	        
 	        timeline.push(welcome);
 	        
@@ -41,7 +74,63 @@
 	        };
 	        
 	        timeline.push(inst);
+	        
+	        // experiment constants
+        // Set the following to true to enable Pavlovia
+        const runat_pavlovia = false;  // set to false for running locally, true for running at Pavlovia
+        const timeout_penalty = -10;  // amount of "reward" for a timeout.  Make negative to deduct points from total.
+        const timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeout mode is deactivated.
 
+        const response_duration = 2000; // duration (ms) for a response before timeout, if timeout is enabled
+        const warning_duration = 2000;  // duration (ms) of warning icon after a timeout
+        const display_choice_duration = 1000;  // duration (ms) to display choice before showing feedback
+        const feedback_duration = 1000;  // duration (ms) to display choice together with rewarded side
+
+
+        // load schedules
+
+        let schedule_stable;
+        let schedule_stochastic;
+        let schedule_volatile;
+        async function getSchedules() {
+            schedule_stable = await d3.csv('schedules/Stable.csv');
+            schedule_stochastic = await d3.csv('schedules/Stochastic.csv');
+            schedule_volatile = await d3.csv('schedules/Volatile.csv');
+            setTimeout(build_and_run_experiment, 1000);  // wait a second so that files can load before running experiment
+        }
+        getSchedules();
+
+        function build_and_run_experiment() {
+
+            // randomize order of stable, stochastic, and volatile blocks
+            switch(Math.floor(Math.random() * 6)) {
+                case 0:
+                    box_vals = [].concat(schedule_stable, schedule_stochastic, schedule_volatile);
+                    break;
+                case 1:
+                    box_vals = [].concat(schedule_stable, schedule_volatile, schedule_stochastic);
+                    break;
+                case 2:
+                    box_vals = [].concat(schedule_stochastic, schedule_volatile, schedule_stable);
+                    break;
+                case 3:
+                    box_vals = [].concat(schedule_stochastic, schedule_stable, schedule_volatile);
+                    break;
+                case 4:
+                    box_vals = [].concat(schedule_volatile, schedule_stable, schedule_stochastic);
+                    break;
+                case 5:
+                    box_vals = [].concat(schedule_volatile, schedule_stochastic, schedule_stable);
+                    break;
+            }
+
+            const possible_stable = 1412;
+            const possible_volatile = 1389;
+            const possible_stochastic = 1454;
+            const possible_total =  possible_volatile + possible_stable + possible_stochastic;
+            
+            
+            
 	        let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
 	            let valLeft;
 	            let valRight;
