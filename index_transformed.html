@@ -142,6 +142,13 @@
             generate_schedules();
             build_and_run_experiment();
 
+            jsPsych.init({
+                timeline: timeline,
+                preload_images: preload_images,
+                on_finish: function () {
+
+                }
+            });
 
     </script>
     </html>
