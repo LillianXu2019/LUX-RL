@@ -139,13 +139,19 @@
                 return results == null ? null : results[1];
             }
 
-            // link to the next part of the study
-            jsPsych.init({
-                timeline: timeline,
-                preload_images: preload_images,
-                on_finish: function () {
+            async function getSchedulesAndInit() {
+                await getSchedules();
+                // link to the next part of the study
+                build_and_run_experiment();
+                jsPsych.init({
+                    timeline: timeline,
+                    preload_images: preload_images,
+                    on_finish: function () {
 
-                }
-            });
+                    }
+                });
+            }
+            getSchedulesAndInit();
+
     </script>
     </html>
