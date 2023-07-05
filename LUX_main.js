@@ -26,7 +26,11 @@ var images = [
     "instructions/Slide16.png",
     "instructions/Slide17.png",
     "instructions/Slide18.png",
-    "timeout.jpg"
+    "instructions/Slide18.png",
+    "instructions/Slide19.png",
+    "instructions/Slide20.png",
+    "instructions/Slide21.png",
+    "timeout1_nobg.png"
     ]
     
 var preload_images=[];
