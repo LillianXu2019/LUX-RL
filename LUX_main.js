@@ -380,7 +380,7 @@ function build_and_run_experiment() {
                         // display warning icon and apply penalty to points
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png">',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src="' + repo_site + 'images/timeout1_nobg.png">',
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
