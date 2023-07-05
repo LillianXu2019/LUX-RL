@@ -87,21 +87,172 @@ const display_choice_duration = 1000;  // duration (ms) to display choice before
 const feedback_duration = 1000;  // duration (ms) to display choice together with rewarded side
 
 
-// load schedules
+// randomly assign background colors to blocks
+let background_colors = ['#fff0eb', '#edffeb', '#ebf3ff'];
+background_colors = jsPsych.randomization.repeat(background_colors, 1);
+let block_colors = {
+    stable: background_colors[0],
+    stochastic: background_colors[1],
+    volatile: background_colors[2]
+}
 
+function setBackgroundColor(block){
+    document.body.style.backgroundColor = block_colors[block];
+}
+
+// load schedules
 let schedule_stable;
 let schedule_stochastic;
 let schedule_volatile;
 
-async function getSchedules() {
-    schedule_stable = await d3.csv('schedules/Stable.csv');
-    schedule_stochastic = await d3.csv('schedules/Stochastic.csv');
-    schedule_volatile = await d3.csv('schedules/Volatile.csv');
+// https://observablehq.com/@chrispahm/skew-normal-distributions
+function randomTruncSkewNormal({
+                                   rng = Math.random,
+                                   range = [-Infinity, Infinity],
+                                   mean,
+                                   stdDev,
+                                   skew = 0
+                               }) {
+    // Box-Muller transform
+    function randomNormals(rng) {
+        let u1 = 0,
+            u2 = 0;
+        //Convert [0,1) to (0,1)
+        while (u1 === 0) u1 = rng();
+        while (u2 === 0) u2 = rng();
+        const R = Math.sqrt(-2.0 * Math.log(u1));
+        const theta = 2.0 * Math.PI * u2;
+        return [R * Math.cos(theta), R * Math.sin(theta)];
+    }
+
+    // Skew-normal transform
+    // If a variate is either below or above the desired range,
+    // we recursively call the randomSkewNormal function until
+    // a value within the desired range is drawn
+    function randomSkewNormal(rng, mean, stdDev, skew = 0) {
+        const [u0, v] = randomNormals(rng);
+        if (skew === 0) {
+            const value = mean + stdDev * u0;
+            if (value < range[0] || value > range[1])
+                return randomSkewNormal(rng, mean, stdDev, skew);
+            return value;
+        }
+        const sig = skew / Math.sqrt(1 + skew * skew);
+        const u1 = sig * u0 + Math.sqrt(1 - sig * sig) * v;
+        const z = u0 >= 0 ? u1 : -u1;
+        const value = mean + stdDev * z;
+        if (value < range[0] || value > range[1])
+            return randomSkewNormal(rng, mean, stdDev, skew);
+        return value;
+    }
+
+    return randomSkewNormal(rng, mean, stdDev, skew);
+}
+
+
+// Instead of loading predefined schedules, generate randomly
+function generate_schedules() {
+    schedule_stable = [];
+    for (let i=0; i<70; i++){
+        schedule_stable.push({
+            block: 'stable',
+            magOpt1: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 2
+            })),
+            magOpt2: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 2
+            })),
+            trueProbability: 0.75,
+            opt1Rewarded: d3.randomBernoulli(0.75)(),
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
+
+    schedule_stochastic = [];
+    for (let i=0; i<70; i++){
+        schedule_stochastic.push({
+            block: 'stochastic',
+            magOpt1: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            magOpt2: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            trueProbability: 0.75,
+            opt1Rewarded: d3.randomBernoulli(0.75)(),
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
+
+    schedule_volatile = [];
+    for (let i=0; i<20; i++){
+        schedule_volatile.push({
+            block: 'volatile',
+            magOpt1: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            magOpt2: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            trueProbability: 0.75,
+            opt1Rewarded: d3.randomBernoulli(0.20)(),
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
+    for (let i=0; i<30; i++){
+        schedule_volatile.push({
+            block: 'volatile',
+            magOpt1: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            magOpt2: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            trueProbability: 0.75,
+            opt1Rewarded: d3.randomBernoulli(0.80)(),
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
+    for (let i=0; i<20; i++){
+        schedule_volatile.push({
+            block: 'volatile',
+            magOpt1: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            magOpt2: Math.round(randomTruncSkewNormal({
+                range: [0, Infinity],
+                mean: 20,
+                stdDev: 10
+            })),
+            trueProbability: 0.75,
+            opt1Rewarded: d3.randomBernoulli(0.20)(),
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
 }
 
 function build_and_run_experiment() {
 
     // randomize order of stable, stochastic, and volatile blocks
+    let box_vals;
     switch(Math.floor(Math.random() * 6)) {
         case 0:
             box_vals = [].concat(schedule_stable, schedule_stochastic, schedule_volatile);
@@ -135,7 +286,7 @@ function build_and_run_experiment() {
         let valRight;
         let classLeft;
         let classRight;
-        if(opt1Left === "1"){
+        if(opt1Left === 1){
             valLeft = val1;
             valRight = val2;
             classLeft = 'box1';
@@ -183,12 +334,16 @@ function build_and_run_experiment() {
                         return display_boxes(val1, val2, opt1Left, reward_total);
                     },
                     choices: [37, 39],
+                    on_start: function() {
+                        let block = jsPsych.timelineVariable('block', true);
+                        setBackgroundColor(block);
+                    },
                     on_finish: function (data) {
                         let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                        if((opt1Rewarded === 1) !== (opt1Left === 1)) {
                             // right response should be rewarded
                             data.rewarded_side = 'right';
                             data.correct = data.key_press === 39;
@@ -200,7 +355,7 @@ function build_and_run_experiment() {
 
                         // Store the reward
                         if(data.correct) {
-                            if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                            if((data.rewarded_side === 'left') === (opt1Left === 1)) {
                                 data.reward = parseInt(val1);
                             } else {
                                 data.reward = parseInt(val2);
@@ -222,7 +377,7 @@ function build_and_run_experiment() {
                         // display warning icon and apply penalty to points
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout2.jpg">',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png">',
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
@@ -246,7 +401,7 @@ function build_and_run_experiment() {
                                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                                if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                                if((opt1Rewarded === 1) !== (opt1Left === 1)) {
                                     // right response should be rewarded
                                     data.rewarded_side = 'right';
                                     data.correct = data.key_press === 39;
@@ -258,7 +413,7 @@ function build_and_run_experiment() {
 
                                 // Store the reward
                                 if(data.correct) {
-                                    if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                                    if((data.rewarded_side === 'left') === (opt1Left === 1)) {
                                         data.reward = parseInt(val1);
                                     } else {
                                         data.reward = parseInt(val2);
@@ -297,12 +452,16 @@ function build_and_run_experiment() {
                         return display_boxes(val1, val2, opt1Left, reward_total);
                     },
                     choices: [37, 39],
+                    on_start: function() {
+                        let block = jsPsych.timelineVariable('block', true);
+                        setBackgroundColor(block);
+                    },
                     on_finish: function (data) {
                         let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                        if((opt1Rewarded === 1) !== (opt1Left === 1)) {
                             // right response should be rewarded
                             data.rewarded_side = 'right';
                             data.correct = data.key_press === 39;
@@ -314,7 +473,7 @@ function build_and_run_experiment() {
 
                         // Store the reward
                         if(data.correct) {
-                            if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                            if((data.rewarded_side === 'left') === (opt1Left === 1)) {
                                 data.reward = parseInt(val1);
                             } else {
                                 data.reward = parseInt(val2);
@@ -335,7 +494,7 @@ function build_and_run_experiment() {
                     timeline: [
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout2.jpg">',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png">',
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
@@ -366,12 +525,16 @@ function build_and_run_experiment() {
                 return display_boxes(val1, val2, opt1Left, reward_total);
             },
             choices: [37, 39],
+            on_start: function() {
+                let block = jsPsych.timelineVariable('block', true);
+                setBackgroundColor(block);
+            },
             on_finish: function (data) {
                 let opt1Rewarded = jsPsych.timelineVariable('opt1Rewarded', true);
                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                if((opt1Rewarded === '1') !== (opt1Left === '1')) {
+                if((opt1Rewarded === 1) !== (opt1Left === 1)) {
                     // right response should be rewarded
                     data.rewarded_side = 'right';
                     data.correct = data.key_press === 39;
@@ -383,7 +546,7 @@ function build_and_run_experiment() {
 
                 // Store the reward
                 if(data.correct) {
-                    if((data.rewarded_side === 'left') === (opt1Left === '1')) {
+                    if((data.rewarded_side === 'left') === (opt1Left === 1)) {
                         data.reward = parseInt(val1);
                     } else {
                         data.reward = parseInt(val2);

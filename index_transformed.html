@@ -139,19 +139,9 @@
                 return results == null ? null : results[1];
             }
 
-            async function getSchedulesAndInit() {
-                await getSchedules();
-                // link to the next part of the study
-                build_and_run_experiment();
-                jsPsych.init({
-                    timeline: timeline,
-                    preload_images: preload_images,
-                    on_finish: function () {
+            generate_schedules();
+            build_and_run_experiment();
 
-                    }
-                });
-            }
-            getSchedulesAndInit();
 
     </script>
     </html>
