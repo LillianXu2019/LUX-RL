@@ -76,7 +76,7 @@ pages: [
     show_clickable_nav: true
 };
 
-timeline.push(inst);
+//timeline.push(inst);  // commented out for testing!!!
     
 // experiment constants
 // Set the following to true to enable Pavlovia
@@ -87,8 +87,13 @@ const timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeou
 const response_duration = 2000; // duration (ms) for a response before timeout, if timeout is enabled
 const warning_duration = 2000;  // duration (ms) of warning icon after a timeout
 const display_choice_duration = 1000;  // duration (ms) to display choice before showing feedback
-const feedback_duration = 1000;  // duration (ms) to display choice together with rewarded side
+const feedback_duration = 1000; // duration (ms) to display choice together with rewarded side
 
+// randomly assign colors to box1/box2
+let box_color_classes = ['color-a', 'color-b'];
+box_color_classes = jsPsych.randomization.repeat(box_color_classes, 1);
+let box1_class = box_color_classes[0];
+let box2_class = box_color_classes[1];
 
 // randomly assign background colors to blocks
 let background_colors = ['#fff0eb', '#edffeb', '#ebf3ff'];
@@ -107,6 +112,7 @@ function setBackgroundColor(block){
 let schedule_stable;
 let schedule_stochastic;
 let schedule_volatile;
+var max_possible_points = 0;
 
 // https://observablehq.com/@chrispahm/skew-normal-distributions
 function randomTruncSkewNormal({
@@ -152,108 +158,106 @@ function randomTruncSkewNormal({
     return randomSkewNormal(rng, mean, stdDev, skew);
 }
 
+// return a random integer from the closed interval [rangeStart, rangeEnd]
+function randomInt(rangeStart, rangeEnd) {
+    return Math.floor(Math.random() * (rangeEnd - rangeStart + 1)) + rangeStart;
+}
+
+function starString(numberOfStars) {
+    return '<div class="starcontainer">' +
+        '<div class="filledstar star">&#9733;</div>'.repeat(numberOfStars) +
+        '<div class="hollowstar star">&#9734;</div>'.repeat(15-numberOfStars) +
+        '</div>';
+}
+
 
 // Instead of loading predefined schedules, generate randomly
 function generate_schedules() {
+
     schedule_stable = [];
+    // Box1 val is randomly selected from (5, 15] and is stable throughout the block
+    let stable_box1_val = randomInt(6, 15);
+    let stable_box2_val = stable_box1_val - 5;
     for (let i=0; i<70; i++){
+        max_possible_points += Math.max(stable_box1_val, stable_box2_val);
         schedule_stable.push({
             block: 'stable',
-            magOpt1: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 2
-            })),
-            magOpt2: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 2
-            })),
-            trueProbability: 0.75,
-            opt1Rewarded: d3.randomBernoulli(0.75)(),
+            magOpt1: stable_box1_val,
+            magOpt2: stable_box2_val,
             opt1Left: d3.randomBernoulli(0.5)()
         });
     }
 
     schedule_stochastic = [];
     for (let i=0; i<70; i++){
+        let box1_val = randomInt(5, 15);
+        let box2_val = randomInt(0, 10);
+        max_possible_points += Math.max(box1_val, box2_val);
         schedule_stochastic.push({
             block: 'stochastic',
-            magOpt1: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            magOpt2: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            trueProbability: 0.75,
-            opt1Rewarded: d3.randomBernoulli(0.75)(),
+            magOpt1: box1_val,
+            magOpt2: box2_val,
             opt1Left: d3.randomBernoulli(0.5)()
         });
     }
 
     schedule_volatile = [];
+    let box1_val;
+    let box2_val;
+
+    // Trials 1-20
+    box1_val = randomInt(10, 15);
+    box2_val = randomInt(5, 9);
     for (let i=0; i<20; i++){
+        max_possible_points += Math.max(box1_val, box2_val);
         schedule_volatile.push({
             block: 'volatile',
-            magOpt1: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            magOpt2: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            trueProbability: 0.75,
-            opt1Rewarded: d3.randomBernoulli(0.20)(),
+            magOpt1: box1_val,
+            magOpt2: box2_val,
             opt1Left: d3.randomBernoulli(0.5)()
         });
     }
-    for (let i=0; i<30; i++){
+
+    // Trials 21-35
+    box2_val = randomInt(10, 15);
+    box1_val = box2_val - randomInt(5,9);
+    for (let i=0; i<15; i++){
+        max_possible_points += Math.max(box1_val, box2_val);
         schedule_volatile.push({
             block: 'volatile',
-            magOpt1: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            magOpt2: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            trueProbability: 0.75,
-            opt1Rewarded: d3.randomBernoulli(0.80)(),
+            magOpt1: box1_val,
+            magOpt2: box2_val,
             opt1Left: d3.randomBernoulli(0.5)()
         });
     }
+
+    // Trials 36-55
+    box1_val = randomInt(10, 15);
+    box2_val = box1_val - randomInt(5,9);
     for (let i=0; i<20; i++){
+        max_possible_points += Math.max(box1_val, box2_val);
         schedule_volatile.push({
             block: 'volatile',
-            magOpt1: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            magOpt2: Math.round(randomTruncSkewNormal({
-                range: [0, Infinity],
-                mean: 20,
-                stdDev: 10
-            })),
-            trueProbability: 0.75,
-            opt1Rewarded: d3.randomBernoulli(0.20)(),
+            magOpt1: box1_val,
+            magOpt2: box2_val,
+            opt1Left: d3.randomBernoulli(0.5)()
+        });
+    }
+    // Trials 56-70
+    box2_val = randomInt(10, 15);
+    box1_val = box2_val - randomInt(5,9);
+    for (let i=0; i<15; i++){
+        max_possible_points += Math.max(box1_val, box2_val);
+        schedule_volatile.push({
+            block: 'volatile',
+            magOpt1: box1_val,
+            magOpt2: box2_val,
             opt1Left: d3.randomBernoulli(0.5)()
         });
     }
 }
 
 function build_and_run_experiment() {
-
     // randomize order of stable, stochastic, and volatile blocks
     let box_vals;
     switch(Math.floor(Math.random() * 6)) {
@@ -276,42 +280,49 @@ function build_and_run_experiment() {
             box_vals = [].concat(schedule_volatile, schedule_stochastic, schedule_stable);
             break;
     }
-
-    const possible_stable = 1412;
-    const possible_volatile = 1389;
-    const possible_stochastic = 1454;
-    const possible_total =  possible_volatile + possible_stable + possible_stochastic;
-    
-    
     
     let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
         let valLeft;
         let valRight;
+        let starsLeft = '';
+        let starsRight = '';
         let classLeft;
         let classRight;
+
         if(opt1Left === 1){
             valLeft = val1;
             valRight = val2;
-            classLeft = 'box1';
-            classRight = 'box2';
+            classLeft = box1_class;
+            classRight = box2_class;
         } else {
             valLeft = val2;
             valRight = val1;
-            classLeft = 'box2';
-            classRight = 'box1';
+            classLeft = box2_class;
+            classRight = box1_class;
+        }
+
+        // if feedback is not undefined, show stars on the appropriate side
+        if(feedback !== undefined) {
+            if(selected === 'left') {
+                starsLeft = starString(valLeft);
+            } else {
+                starsRight = starString(valRight);
+            }
         }
 
         let string_parts = []
         string_parts.push('<div class="container"><div class="' + classLeft + ' box');
         if (selected === 'left') string_parts.push(' selected ');
-        if (feedback === 'left') string_parts.push(' highlight ');
-        string_parts.push('">' + valLeft + '</div><div class="' + classRight + ' box');
+        //if (feedback === 'left') string_parts.push(' highlight ');
+        string_parts.push('">' + starsLeft + '</div><div class="box-middle">');
+        if (selected === undefined) string_parts.push('+');
+        string_parts.push('</div><div class="' + classRight + ' box');
         if (selected === 'right') string_parts.push(' selected ');
-        if (feedback === 'right') string_parts.push(' highlight ');
-        string_parts.push('">' + valRight + '</div></div>');
+        //if (feedback === 'right') string_parts.push(' highlight ');
+        string_parts.push('">' + starsRight + '</div></div>');
         string_parts.push('<div class="reward_points">' + reward_total + '</div>');
         string_parts.push('<div class="reward_bar_border"><div class="reward_bar" style="width:');
-        string_parts.push(reward_total / possible_total * 100);
+        string_parts.push(reward_total / max_possible_points * 100);
         string_parts.push('%;"></div></div>');
         return string_parts.join('')
     }
@@ -346,31 +357,26 @@ function build_and_run_experiment() {
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        if((opt1Rewarded === 1) !== (opt1Left === 1)) {
-                            // right response should be rewarded
-                            data.rewarded_side = 'right';
-                            data.correct = data.key_press === 39;
+                        let valLeft;
+                        let valRight;
+                        if(opt1Left === 1) {
+                            valLeft = val1;
+                            valRight = val2;
                         } else {
-                            // left response should be rewarded
-                            data.rewarded_side = 'left';
-                            data.correct = data.key_press === 37;
+                            valLeft = val2;
+                            valRight = val1;
                         }
 
-                        // Store the reward
-                        if(data.correct) {
-                            if((data.rewarded_side === 'left') === (opt1Left === 1)) {
-                                data.reward = parseInt(val1);
-                            } else {
-                                data.reward = parseInt(val2);
-                            }
-                        } else {
-                            data.reward = 0;
-                        }
-
+                        data.rewarded_side = 'both';
                         if (data.key_press === 37) {
                             data.selected_side = 'left';
-                        } else {
+                            data.reward = parseInt(valLeft);
+                        } else if(data.key_press === 39) {
                             data.selected_side = 'right';
+                            data.reward = parseInt(valRight);
+                        } else {
+                            // timeout
+                            data.reward = 0;
                         }
                     },
                     trial_duration: response_duration
@@ -404,31 +410,27 @@ function build_and_run_experiment() {
                                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                                if((opt1Rewarded === 1) !== (opt1Left === 1)) {
-                                    // right response should be rewarded
-                                    data.rewarded_side = 'right';
-                                    data.correct = data.key_press === 39;
+
+                                let valLeft;
+                                let valRight;
+                                if(opt1Left === 1) {
+                                    valLeft = val1;
+                                    valRight = val2;
                                 } else {
-                                    // left response should be rewarded
-                                    data.rewarded_side = 'left';
-                                    data.correct = data.key_press === 37;
+                                    valLeft = val2;
+                                    valRight = val1;
                                 }
 
-                                // Store the reward
-                                if(data.correct) {
-                                    if((data.rewarded_side === 'left') === (opt1Left === 1)) {
-                                        data.reward = parseInt(val1);
-                                    } else {
-                                        data.reward = parseInt(val2);
-                                    }
-                                } else {
-                                    data.reward = 0;
-                                }
-
+                                data.rewarded_side = 'both';
                                 if (data.key_press === 37) {
                                     data.selected_side = 'left';
-                                } else {
+                                    data.reward = parseInt(valLeft);
+                                } else if(data.key_press === 39) {
                                     data.selected_side = 'right';
+                                    data.reward = parseInt(valRight);
+                                } else {
+                                    // timeout
+                                    data.reward = 0;
                                 }
                             }
                         },
@@ -464,32 +466,29 @@ function build_and_run_experiment() {
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        if((opt1Rewarded === 1) !== (opt1Left === 1)) {
-                            // right response should be rewarded
-                            data.rewarded_side = 'right';
-                            data.correct = data.key_press === 39;
+
+                        let valLeft;
+                        let valRight;
+                        if(opt1Left === 1) {
+                            valLeft = val1;
+                            valRight = val2;
                         } else {
-                            // left response should be rewarded
-                            data.rewarded_side = 'left';
-                            data.correct = data.key_press === 37;
+                            valLeft = val2;
+                            valRight = val1;
                         }
 
-                        // Store the reward
-                        if(data.correct) {
-                            if((data.rewarded_side === 'left') === (opt1Left === 1)) {
-                                data.reward = parseInt(val1);
-                            } else {
-                                data.reward = parseInt(val2);
-                            }
+                        data.rewarded_side = 'both';
+                        if (data.key_press === 37) {
+                            data.selected_side = 'left';
+                            data.reward = parseInt(valLeft);
+                        } else if(data.key_press === 39) {
+                            data.selected_side = 'right';
+                            data.reward = parseInt(valRight);
                         } else {
+                            // timeout
                             data.reward = 0;
                         }
 
-                        if (data.key_press === 37) {
-                            data.selected_side = 'left';
-                        } else {
-                            data.selected_side = 'right';
-                        }
                     },
                     trial_duration: response_duration
                 },
@@ -537,32 +536,29 @@ function build_and_run_experiment() {
                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                if((opt1Rewarded === 1) !== (opt1Left === 1)) {
-                    // right response should be rewarded
-                    data.rewarded_side = 'right';
-                    data.correct = data.key_press === 39;
+
+                let valLeft;
+                let valRight;
+                if(opt1Left === 1) {
+                    valLeft = val1;
+                    valRight = val2;
                 } else {
-                    // left response should be rewarded
-                    data.rewarded_side = 'left';
-                    data.correct = data.key_press === 37;
+                    valLeft = val2;
+                    valRight = val1;
                 }
 
-                // Store the reward
-                if(data.correct) {
-                    if((data.rewarded_side === 'left') === (opt1Left === 1)) {
-                        data.reward = parseInt(val1);
-                    } else {
-                        data.reward = parseInt(val2);
-                    }
+                data.rewarded_side = 'both';
+                if (data.key_press === 37) {
+                    data.selected_side = 'left';
+                    data.reward = parseInt(valLeft);
+                } else if(data.key_press === 39) {
+                    data.selected_side = 'right';
+                    data.reward = parseInt(valRight);
                 } else {
+                    // timeout
                     data.reward = 0;
                 }
 
-                if (data.key_press === 37) {
-                    data.selected_side = 'left';
-                } else {
-                    data.selected_side = 'right';
-                }
             }
         }
 
@@ -600,7 +596,7 @@ function build_and_run_experiment() {
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
                 let d = jsPsych.data.get().last(2).values()[0];
                 let reward_total = jsPsych.data.get().select('reward').sum();
-                return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side, d.rewarded_side)
+                return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side, d.rewarded_side);
             },
             choices: jsPsych.NO_KEYS,
             trial_duration: feedback_duration
