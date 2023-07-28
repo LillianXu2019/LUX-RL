@@ -76,7 +76,7 @@ pages: [
     show_clickable_nav: true
 };
 
-//timeline.push(inst);  // commented out for testing!!!
+timeline.push(inst);
     
 // experiment constants
 // Set the following to true to enable Pavlovia
