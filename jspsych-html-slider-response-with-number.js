@@ -140,17 +140,6 @@ jsPsych.plugins['html-slider-response'] = (function() {
 
     display_element.innerHTML = html;
 
-    $(document).ready(function() {
-
-      const $valueSpan = $('.valueSpan');
-      const $value = $('#jspsych-html-slider-response-response');
-      $valueSpan.html($value.val());
-      $value.on('input change', () => {
-
-        $valueSpan.html($value.val());
-      });
-    });
-
     var response = {
       rt: null,
       response: null
@@ -161,6 +150,10 @@ jsPsych.plugins['html-slider-response'] = (function() {
         display_element.querySelector('#jspsych-html-slider-response-next').disabled = false;
       });
     }
+
+    display_element.querySelector('#jspsych-html-slider-response-response').addEventListener('change', function(){
+      $('.valueSpan').html($('#jspsych-html-slider-response-response').val());
+    });
 
     display_element.querySelector('#jspsych-html-slider-response-next').addEventListener('click', function() {
       // measure response time
