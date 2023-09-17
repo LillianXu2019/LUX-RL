@@ -665,6 +665,7 @@ function build_and_run_experiment() {
             timeline_variables: box_vals.slice(blocks[i-1], blocks[i])
         });
         timeline.push(manipulation_check_procedure);
+        debugger;
 
         if(blocks[i] % 70 === 0){
             // display motivational slide
