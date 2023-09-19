@@ -28,7 +28,6 @@ var images = [
     "instructions/Slide18.png",
     "instructions/Slide19.png",
     "instructions/Slide20.png",
-    "instructions/Slide21.png",
     "timeout1_nobg.png"
     ]
     
