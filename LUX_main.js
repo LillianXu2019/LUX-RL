@@ -49,7 +49,7 @@ var welcome = {
     delay_after: 500
 }
 
-timeline.push(welcome);
+// timeline.push(welcome);
 
 let inst = {
 type: 'instructions',
@@ -75,7 +75,7 @@ pages: [
     show_clickable_nav: true
 };
 
-timeline.push(inst);
+// timeline.push(inst);
     
 // experiment constants
 // Set the following to true to enable Pavlovia
@@ -656,7 +656,8 @@ function build_and_run_experiment() {
 
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175, 190, 210];
+    // var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175, 190, 210];
+    var blocks = [0, 10, 5];
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
