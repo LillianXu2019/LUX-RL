@@ -49,7 +49,7 @@ var welcome = {
     delay_after: 500
 }
 
-// timeline.push(welcome);
+timeline.push(welcome);
 
 let inst = {
 type: 'instructions',
@@ -75,7 +75,7 @@ pages: [
     show_clickable_nav: true
 };
 
-// timeline.push(inst);
+timeline.push(inst);
     
 // experiment constants
 // Set the following to true to enable Pavlovia
