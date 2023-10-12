@@ -8,6 +8,7 @@ var repo_site = "https://LillianXu2019.github.io/LUX-RL/";
 var imageExt = repo_site + 'images/'
 
 var images = [
+    "instructions/Slide1.png",
     "instructions/Slide2.png",
     "instructions/Slide3.png",
     "instructions/Slide4.png",
