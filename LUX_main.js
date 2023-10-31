@@ -105,7 +105,8 @@ let block_colors = {
 }
 
 function setBackgroundColor(block){
-    document.body.style.backgroundColor = block_colors[block];
+    document.getElementById('display_stage').style.backgroundColor = block_colors[block];
+    //document.body.style.backgroundColor = block_colors[block];
 }
 
 // load schedules
