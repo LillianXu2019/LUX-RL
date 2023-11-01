@@ -50,6 +50,12 @@ var welcome = {
     delay_after: 500
 }
 
+var take_a_break = {
+    type: "html-keyboard-response",
+    stimulus: 'Time for a break!',
+    prompt: "Press any key when you're ready to continue"
+}
+
 timeline.push(welcome);
 
 let inst = {
@@ -179,7 +185,7 @@ function generate_schedules() {
     // Box1 val is randomly selected from (5, 15] and is stable throughout the block
     let stable_box1_val = randomInt(6, 15);
     let stable_box2_val = stable_box1_val - 5;
-    for (let i=0; i<70; i++){
+    for (let i=0; i<35; i++){
         max_possible_points += Math.max(stable_box1_val, stable_box2_val);
         schedule_stable.push({
             block: 'stable',
@@ -260,27 +266,36 @@ function generate_schedules() {
 
 function build_and_run_experiment() {
     // randomize order of stable, stochastic, and volatile blocks
+    let ordered_blocks;
     let box_vals;
+    let break_breaks;
     switch(Math.floor(Math.random() * 6)) {
         case 0:
-            box_vals = [].concat(schedule_stable, schedule_stochastic, schedule_volatile);
+            ordered_blocks = [schedule_stable, schedule_stochastic, schedule_volatile];
             break;
         case 1:
-            box_vals = [].concat(schedule_stable, schedule_volatile, schedule_stochastic);
+            ordered_blocks = [schedule_stable, schedule_volatile, schedule_stochastic];
             break;
         case 2:
-            box_vals = [].concat(schedule_stochastic, schedule_volatile, schedule_stable);
+            ordered_blocks = [schedule_stochastic, schedule_volatile, schedule_stable];
             break;
         case 3:
-            box_vals = [].concat(schedule_stochastic, schedule_stable, schedule_volatile);
+            ordered_blocks = [schedule_stochastic, schedule_stable, schedule_volatile];
             break;
         case 4:
-            box_vals = [].concat(schedule_volatile, schedule_stable, schedule_stochastic);
+            ordered_blocks = [schedule_volatile, schedule_stable, schedule_stochastic];
             break;
         case 5:
-            box_vals = [].concat(schedule_volatile, schedule_stochastic, schedule_stable);
+            ordered_blocks = [schedule_volatile, schedule_stochastic, schedule_stable];
             break;
     }
+
+    // need to know when it's time to take a break between blocks
+    block_breaks = [
+        ordered_blocks[0].length,
+        ordered_blocks[0].length + ordered_blocks[1].length
+    ];
+    box_vals = ordered_blocks.flat()
     
     let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
         let valLeft;
@@ -387,7 +402,7 @@ function build_and_run_experiment() {
                         // display warning icon and apply penalty to points
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src="' + repo_site + 'images/timeout1_nobg.png">',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src="' + repo_site + 'images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
@@ -497,7 +512,7 @@ function build_and_run_experiment() {
                     timeline: [
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png">',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
@@ -658,7 +673,7 @@ function build_and_run_experiment() {
 
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175, 190, 210];
+    var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
     // var blocks = [0, 15, 25];
 
     for (let i=1; i < blocks.length; i++){
@@ -668,8 +683,9 @@ function build_and_run_experiment() {
         });
         timeline.push(manipulation_check_procedure);
 
-        if(blocks[i] % 70 === 0){
-            // display motivational slide
+        if(block_breaks.includes(blocks[i])){
+            // time to take a break
+            timeline.push(take_a_break);
         }
     }
 }
