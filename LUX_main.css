@@ -1,0 +1,109 @@
+.instructions-image {
+    width: 100%;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 140px;
+    width: 100%;
+}
+.box {
+    color: white;
+    height: 300px;
+    width: 300px;
+
+    font-size: larger;
+    font-weight: bold;
+
+    text-align: center;
+    vertical-align: center;
+    line-height: 60px;
+    margin: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.box-middle {
+    width: 20px;
+    font-size: 48px;
+}
+.star {
+    font-size: 32pt;
+    width: 20%;
+    height: 30px;
+    display: inline-block;
+}
+.filledstar {
+    color: gold;
+}
+.hollowstar {
+    color: white;
+}
+.color-a {
+    background-color: deepskyblue;
+}
+.color-b {
+    background-color: green;
+}
+.selected {
+    margin: 20px;
+    border: 20px solid gray;
+}
+.highlight {
+    margin: 40px;
+    box-shadow: 0 0 0 40px yellow;
+}
+.selected.highlight {
+    margin: 20px;
+    box-shadow: 0 0 0 20px yellow;
+}
+.reward_bar_border {
+    position: relative;
+    top: 60px;
+    margin: 20px auto 20px auto;
+    width: 80%;
+    height: 30px;
+    border: 1px solid gray;
+    background-color: lightcyan;
+}
+.reward_bar {
+    height: 30px;
+    background-color: red;
+    min-width: 1px;
+}
+.reward_points {
+    position: relative;
+    top: 40px;
+    font-weight: bold;
+    font-size: larger;
+}
+.reward_points:before {
+    font-weight: bold;
+    font-size: larger;
+    content: "Total Points: "
+}
+.timeout-image {
+    width: 50%;
+}
+
+#display_stage_background {
+    width: 100vw;
+    background-color: white;
+    z-index: -1;
+}
+
+#display_stage {
+    position: fixed;
+    left: 1vw;
+    top: 1vh;
+    height: 98vh;
+    width: 98vw;
+    background-color: white;
+    box-shadow: 1px 1px 1px #999;
+    border-radius: 15px;
+    z-index: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
