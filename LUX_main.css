@@ -48,17 +48,17 @@
     background-color: green;
 }
 .selected {
-    margin: 20px;
+    /*margin: 20px;*/
     border: 20px solid gray;
 }
-.highlight {
-    margin: 40px;
-    box-shadow: 0 0 0 40px yellow;
-}
-.selected.highlight {
-    margin: 20px;
-    box-shadow: 0 0 0 20px yellow;
-}
+/*.highlight {*/
+/*    margin: 40px;*/
+/*    box-shadow: 0 0 0 40px yellow;*/
+/*}*/
+/*.selected.highlight {*/
+/*    margin: 20px;*/
+/*    box-shadow: 0 0 0 20px yellow;*/
+/*}*/
 .reward_bar_border {
     position: relative;
     top: 60px;
