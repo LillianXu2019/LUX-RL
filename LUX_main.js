@@ -635,15 +635,32 @@ function build_and_run_experiment() {
                 ]
             },
             {
-                type: 'survey-multi-choice',
-                questions: [
+                timeline: [
                     {
-                        prompt: "Last time you said the [blank] box earns you more points. Did it switch?",
-                        name: 'BetterBoxSwitched',
-                        options: ["Yes", "No", "I don't know"],
-                        required: true
+                        type: 'survey-multi-choice',
+                        questions: function(){
+                            let better_box_trials = jsPsych.data.get().filterCustom(function(trial){
+                                return ('responses' in trial && trial.responses.includes('BetterBox'))
+                            });
+                            let last_response = JSON.parse(better_box_trials.last().values()[0].responses).BetterBox;
+
+                            return [
+                                {
+                                    prompt: "Last time you said the " + last_response + " box earns you more points. Did it switch?",
+                                    name: 'BetterBoxSwitched',
+                                    options: ["Yes", "No", "I don't know"],
+                                    required: true
+                                }
+                            ]
+                        }
                     }
-                ]
+                ],
+                conditional_function: function() {
+                    // only include this question if BetterBox was previously asked
+                    return jsPsych.data.get().filterCustom(function(trial){
+                        return ('responses' in trial && trial.responses.includes('BetterBox'))
+                    }).count() > 1
+                }
             },
             {
                 type: 'html-slider-response',
