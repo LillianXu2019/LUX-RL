@@ -51,6 +51,11 @@
     /*margin: 20px;*/
     border: 20px solid gray;
 }
+#starcontainer {
+
+    margin: auto;
+    width: 50%;
+}
 /*.highlight {*/
 /*    margin: 40px;*/
 /*    box-shadow: 0 0 0 40px yellow;*/

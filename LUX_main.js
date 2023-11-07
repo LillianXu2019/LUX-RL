@@ -54,7 +54,7 @@ var take_a_break = {
     type: "html-keyboard-response",
     stimulus: 'Time for a break!',
     prompt: "Press any key when you're ready to continue"
-}
+};
 
 timeline.push(welcome);
 
@@ -119,7 +119,11 @@ function setBackgroundColor(block){
 let schedule_stable;
 let schedule_stochastic;
 let schedule_volatile;
-var max_possible_points = 0;
+let max_possible_points = 0;
+let max_practice_points = 0;
+let practice_stable;
+let practice_stochastic;
+let practice_volatile;
 
 // https://observablehq.com/@chrispahm/skew-normal-distributions
 function randomTruncSkewNormal({
@@ -181,87 +185,88 @@ function starString(numberOfStars) {
 // Instead of loading predefined schedules, generate randomly
 function generate_schedules() {
 
-    schedule_stable = [];
-    // Box1 val is randomly selected from (5, 15] and is stable throughout the block
-    let stable_box1_val = randomInt(6, 15);
-    let stable_box2_val = stable_box1_val - 5;
-    for (let i=0; i<35; i++){
-        max_possible_points += Math.max(stable_box1_val, stable_box2_val);
-        schedule_stable.push({
-            block: 'stable',
-            magOpt1: stable_box1_val,
-            magOpt2: stable_box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
+    function generate_stable(n, practice=false) {
+        let schedule = [];
+        let box1_val = randomInt(6, 15);
+        let box2_val = box1_val - 5;
+        for (let i=0; i<n; i++){
+            if (practice) {
+                max_practice_points += Math.max(box1_val, box2_val);
+            } else {
+                max_possible_points += Math.max(box1_val, box2_val);
+            }
+
+            schedule.push({
+                block: 'stable',
+                magOpt1: box1_val,
+                magOpt2: box2_val,
+                opt1Left: d3.randomBernoulli(0.5)(),
+                practice: practice
+            });
+        }
+        return schedule;
+    }
+    schedule_stable = generate_stable(35);
+    practice_stable = generate_stable(15, true);
+
+    function generate_stochastic(n, practice=false){
+        let schedule = []
+        for (let i=0; i<n; i++){
+            let box1_val = randomInt(5, 15);
+            let box2_val = randomInt(0, 10);
+            if (practice) {
+                max_practice_points += Math.max(box1_val, box2_val);
+            } else {
+                max_possible_points += Math.max(box1_val, box2_val);
+            }
+            schedule.push({
+                block: 'stochastic',
+                magOpt1: box1_val,
+                magOpt2: box2_val,
+                opt1Left: d3.randomBernoulli(0.5)(),
+                practice: practice
+            });
+        }
+        return schedule;
+    }
+    schedule_stochastic = generate_stochastic(70);
+    practice_stochastic = generate_stochastic(15, true);
+
+    function generate_volatile(block_list, practice=false){
+        let schedule = [];
+        let flipper = true;
+        let box1_val;
+        let box2_val;
+        for (let j=0; j < block_list.length; j++) {
+            if (flipper) {
+                box1_val = randomInt(10, 15);
+                box2_val = box1_val - randomInt(5, 9);
+            } else {
+                box2_val = randomInt(10, 15);
+                box1_val = box2_val - randomInt(5,9);
+            }
+            flipper = !flipper;
+            for (let i=0; i<block_list[j]; i++){
+                if (practice) {
+                    max_practice_points += Math.max(box1_val, box2_val);
+                } else {
+                    max_possible_points += Math.max(box1_val, box2_val);
+                }
+                schedule.push({
+                    block: 'volatile',
+                    magOpt1: box1_val,
+                    magOpt2: box2_val,
+                    opt1Left: d3.randomBernoulli(0.5)(),
+                    practice: practice
+                });
+            }
+        }
+        return schedule;
     }
 
-    schedule_stochastic = [];
-    for (let i=0; i<70; i++){
-        let box1_val = randomInt(5, 15);
-        let box2_val = randomInt(0, 10);
-        max_possible_points += Math.max(box1_val, box2_val);
-        schedule_stochastic.push({
-            block: 'stochastic',
-            magOpt1: box1_val,
-            magOpt2: box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
-    }
+    schedule_volatile = generate_volatile([20, 15, 20, 15]);
+    practice_volatile = generate_volatile([8, 7], true);
 
-    schedule_volatile = [];
-    let box1_val;
-    let box2_val;
-
-    // Trials 1-20
-    box1_val = randomInt(10, 15);
-    box2_val = randomInt(5, 9);
-    for (let i=0; i<20; i++){
-        max_possible_points += Math.max(box1_val, box2_val);
-        schedule_volatile.push({
-            block: 'volatile',
-            magOpt1: box1_val,
-            magOpt2: box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
-    }
-
-    // Trials 21-35
-    box2_val = randomInt(10, 15);
-    box1_val = box2_val - randomInt(5,9);
-    for (let i=0; i<15; i++){
-        max_possible_points += Math.max(box1_val, box2_val);
-        schedule_volatile.push({
-            block: 'volatile',
-            magOpt1: box1_val,
-            magOpt2: box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
-    }
-
-    // Trials 36-55
-    box1_val = randomInt(10, 15);
-    box2_val = box1_val - randomInt(5,9);
-    for (let i=0; i<20; i++){
-        max_possible_points += Math.max(box1_val, box2_val);
-        schedule_volatile.push({
-            block: 'volatile',
-            magOpt1: box1_val,
-            magOpt2: box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
-    }
-    // Trials 56-70
-    box2_val = randomInt(10, 15);
-    box1_val = box2_val - randomInt(5,9);
-    for (let i=0; i<15; i++){
-        max_possible_points += Math.max(box1_val, box2_val);
-        schedule_volatile.push({
-            block: 'volatile',
-            magOpt1: box1_val,
-            magOpt2: box2_val,
-            opt1Left: d3.randomBernoulli(0.5)()
-        });
-    }
 }
 
 function build_and_run_experiment() {
@@ -297,7 +302,7 @@ function build_and_run_experiment() {
     ];
     box_vals = ordered_blocks.flat()
     
-    let display_boxes = function (val1, val2, opt1Left, reward_total, selected, feedback) {
+    let display_boxes = function ({val1, val2, opt1Left, reward_total, selected, feedback, practice = false} = {}) {
         let valLeft;
         let valRight;
         let starsLeft = '';
@@ -338,7 +343,11 @@ function build_and_run_experiment() {
         string_parts.push('">' + starsRight + '</div></div>');
         string_parts.push('<div class="reward_points">' + reward_total + '</div>');
         string_parts.push('<div class="reward_bar_border"><div class="reward_bar" style="width:');
-        string_parts.push(reward_total / max_possible_points * 100);
+        if (practice) {
+            string_parts.push(reward_total / max_practice_points * 100);
+        } else {
+            string_parts.push(reward_total / max_possible_points * 100);
+        }
         string_parts.push('%;"></div></div>');
         return string_parts.join('')
     }
@@ -360,8 +369,10 @@ function build_and_run_experiment() {
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        let reward_total = jsPsych.data.get().select('reward').sum();
-                        return display_boxes(val1, val2, opt1Left, reward_total);
+                        let current_phase = jsPsych.data.get().last().values()[0].phase;
+                        let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
+                        let practice = jsPsych.timelineVariable('practice', true);
+                        return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -417,8 +428,10 @@ function build_and_run_experiment() {
                                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                                let reward_total = jsPsych.data.get().select('reward').sum();
-                                return display_boxes(val1, val2, opt1Left, reward_total);
+                                let current_phase = jsPsych.data.get().last().values()[0].phase;
+                                let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
+                                let practice = jsPsych.timelineVariable('practice', true);
+                                return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
                             },
                             choices: [37, 39],
                             on_finish: function (data) {
@@ -469,8 +482,10 @@ function build_and_run_experiment() {
                         let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                         let val1 = jsPsych.timelineVariable('magOpt1', true);
                         let val2 = jsPsych.timelineVariable('magOpt2', true);
-                        let reward_total = jsPsych.data.get().select('reward').sum();
-                        return display_boxes(val1, val2, opt1Left, reward_total);
+                        let current_phase = jsPsych.data.get().last().values()[0].phase;
+                        let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
+                        let practice = jsPsych.timelineVariable('practice', true);
+                        return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -539,8 +554,10 @@ function build_and_run_experiment() {
                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
-                let reward_total = jsPsych.data.get().select('reward').sum();
-                return display_boxes(val1, val2, opt1Left, reward_total);
+                let current_phase = jsPsych.data.get().last().values()[0].phase;
+                let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
+                let practice = jsPsych.timelineVariable('practice', true);
+                return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
             },
             choices: [37, 39],
             on_start: function() {
@@ -592,12 +609,15 @@ function build_and_run_experiment() {
                 let opt1Left = jsPsych.timelineVariable('opt1Left', true);
                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
+                let practice = jsPsych.timelineVariable('practice', true);
                 let d = jsPsych.data.get().last(1).values()[0];
 
                 // don't include the most recent reward yet
-                let reward_total = jsPsych.data.get().select('reward').sum();
+                let current_phase = jsPsych.data.get().last().values()[0].phase;
+                let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                 let current_reward = jsPsych.data.get().last(1).values()[0].reward;
-                return display_boxes(val1, val2, opt1Left, reward_total - current_reward, d.selected_side);
+                return display_boxes({val1, val2, opt1Left,
+                    reward_total: reward_total - current_reward, selected: d.selected_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
             trial_duration: display_choice_duration
@@ -611,8 +631,10 @@ function build_and_run_experiment() {
                 let val1 = jsPsych.timelineVariable('magOpt1', true);
                 let val2 = jsPsych.timelineVariable('magOpt2', true);
                 let d = jsPsych.data.get().last(2).values()[0];
-                let reward_total = jsPsych.data.get().select('reward').sum();
-                return display_boxes(val1, val2, opt1Left, reward_total, d.selected_side, d.rewarded_side);
+                let current_phase = jsPsych.data.get().last().values()[0].phase;
+                let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
+                let practice = jsPsych.timelineVariable('practice', true);
+                return display_boxes({val1, val2, opt1Left, reward_total, selected: d.selected_side, feedback: d.rewarded_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
             trial_duration: feedback_duration
@@ -622,28 +644,42 @@ function build_and_run_experiment() {
     // Manipulation check
     var manipulation_check_procedure = {
         timeline: [
+            // {
+            //     type: 'survey-multi-choice',
+            //     questions: [
+            //         {
+            //             prompt: "Which box earns you more points?",
+            //             name: 'BetterBox',
+            //             options: ["blue", "green", "I don't know"],
+            //             required: true,
+            //             data: {task: 'check_response'}
+            //         }
+            //     ]
+            // },
+
             {
-                type: 'survey-multi-choice',
-                questions: [
-                    {
-                        prompt: "Which box earns you more points?",
-                        name: 'BetterBox',
-                        options: ["blue", "green", "I don't know"],
-                        required: true,
-                        data: {task: 'check_response'}
-                    }
-                ]
+                    type: 'html-button-response',
+                    choices: ["blue", "green"],
+                    stimulus: '<h2>Which box earns you more points?</h2>',
+                    button_html: [
+                        '<button class="box color-a"></button><h3>%choice%</h3>',
+                        '<button class="box color-b"></button><h3>%choice%</h3>'
+                    ],
+                    data: { name: 'betterbox' }
             },
+
             {
                 timeline: [
                     {
                         type: 'survey-multi-choice',
                         questions: function(){
-                            let better_box_trials = jsPsych.data.get().filterCustom(function(trial){
-                                return ('responses' in trial && trial.responses.includes('BetterBox'))
-                            });
-                            let last_response = JSON.parse(better_box_trials.last().values()[0].responses).BetterBox;
-
+                            // let better_box_trials = jsPsych.data.get().filterCustom(function(trial){
+                            //     return ('responses' in trial && trial.responses.includes('BetterBox'))
+                            // });
+                            //
+                            // let last_response = JSON.parse(better_box_trials.last().values()[0].responses).BetterBox;
+                            let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
+                            let last_response = (last_response_button === '0') ? 'blue' : 'green';
                             return [
                                 {
                                     prompt: "Last time you said the " + last_response + " box earns you more points. Did it switch?",
@@ -656,23 +692,19 @@ function build_and_run_experiment() {
                     }
                 ],
                 conditional_function: function() {
-                    // only include this question if BetterBox was previously asked
-                    return jsPsych.data.get().filterCustom(function(trial){
-                        return ('responses' in trial && trial.responses.includes('BetterBox'))
-                    }).count() > 1
+                    // only include this question if BetterBox was previously asked in current phase
+
+                    let current_phase = jsPsych.data.get().last().values()[0].phase;
+                    return jsPsych.data.get().filter({name: 'betterbox', phase: current_phase}).count() > 1
+                    // return jsPsych.data.get().filterCustom(function(trial){
+                    //     return ('responses' in trial && trial.responses.includes('BetterBox'))
+                    // }).count() > 1
                 }
             },
             {
-                type: 'html-slider-response',
-                stimulus: "<p>Based on what you see, what number will you get from the box that earns you point?</p>",
-                labels: ['0', '30'],
-                min: 0,
-                max: 30,
-                slider_start: 0,
-                step: 1,
-                require_movement: true,
-                prompt: '<p>Move the slider to select a value</p>',
-                slider_number: true,
+                type: 'star-rating',
+                stimulus: "<p>Based on what you see, how many stars will you get from the box that earns you more points?</p>" +
+                    "<p>Click the stars below to tell us your best guess.</p>",
             },
             {
                 type: 'survey-multi-choice',
@@ -688,17 +720,64 @@ function build_and_run_experiment() {
         ]
     }
 
+    // practice manipulation
+    let practice_manipulation_1 = {
+        type: 'html-button-response',
+            choices: ["blue", "green"],
+        stimulus: '<h2>Which box earns you more points?</h2>',
+        button_html: [
+        '<button class="box color-a"></button><h3>%choice%</h3>',
+        '<button class="box color-b"></button><h3>%choice%</h3>'
+    ],
+        data: { name: 'practice_betterbox' }
+    }
+
+    // practice trials
+    let practice_trials;
+    if (Math.random() > 0.5) {
+        practice_trials = [practice_stable, practice_volatile, practice_stochastic].flat();
+    } else {
+        practice_trials = [practice_stable, practice_stochastic, practice_volatile].flat();
+    }
+
+    let blocks = [0, 8, 15, 23, 30, 38, 45];
+    timeline.push({
+        type: "html-keyboard-response",
+        stimulus: "Let's start with some practice trials.",
+        prompt: "Press any key when you're ready to begin!"
+    });
+    for (let i=1; i < blocks.length; i++){
+        timeline.push({
+            timeline: trial,
+            timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
+            data: { phase: 'practice' }
+        });
+        timeline.push({
+            timeline: [manipulation_check_procedure],
+            data: { phase: 'practice' }
+        });
+    }
+
+    timeline.push({
+        type: "html-keyboard-response",
+        stimulus: "Great practice!  Now let's begin the real task.",
+        prompt: "Press any key when you're ready to begin!"
+    });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    var blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
-    // var blocks = [0, 15, 25];
+    blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
             timeline: trial,
-            timeline_variables: box_vals.slice(blocks[i-1], blocks[i])
+            timeline_variables: box_vals.slice(blocks[i-1], blocks[i]),
+            data: { phase: 'test' }
         });
-        timeline.push(manipulation_check_procedure);
+        //timeline.push(manipulation_check_procedure);
+        timeline.push({
+            timeline: [manipulation_check_procedure],
+            data: { phase: 'test' }
+        });
 
         if(block_breaks.includes(blocks[i])){
             // time to take a break
