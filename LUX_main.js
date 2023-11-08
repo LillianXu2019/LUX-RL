@@ -62,6 +62,7 @@ let inst = {
 type: 'instructions',
 pages: [
     'Welcome to this game! Please click next or press the right arrow key to begin.',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide1.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide2.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide3.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide4.png"></img>',
