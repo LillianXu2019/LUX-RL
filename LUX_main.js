@@ -67,7 +67,7 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide3.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide4.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide5.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide6.png"></img>',
+    //'<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide6.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide7.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide8.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide9.png"></img>',
