@@ -79,7 +79,8 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide15.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide16.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide17.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide18.png"></img>'],
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide18.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide19.png"></img>'],
     show_clickable_nav: true
 };
 
@@ -744,7 +745,8 @@ function build_and_run_experiment() {
     let blocks = [0, 8, 15, 23, 30, 38, 45];
     timeline.push({
         type: "html-keyboard-response",
-        stimulus: "Let's start with some practice trials.",
+        stimulus: "<p>Let's start with some practice trials.</p>" + 
+            "<p>Pay attention to how the 3 sets of cards are different.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
     for (let i=1; i < blocks.length; i++){
@@ -761,7 +763,9 @@ function build_and_run_experiment() {
 
     timeline.push({
         type: "html-keyboard-response",
-        stimulus: "Great practice!  Now let's begin the real task.",
+        stimulus: "<p>Great practice!  Now let's begin the real task.</p>" +
+            "<p>Remember, there will be 3 sets of cards with different background colors.</p>" +
+            "<p>You will have a break after each set.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
