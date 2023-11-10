@@ -80,7 +80,13 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide16.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide17.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide18.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide19.png"></img>'],
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide19.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide20.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide21.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide22.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide23.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide24.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>'],
     show_clickable_nav: true
 };
 
