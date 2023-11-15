@@ -69,7 +69,7 @@ var start_a_new_block = {
 
 var trophy = {
     type: 'image-keyboard-response',
-    stimulus: repo_site + 'img/trophy2.jpeg',
+    stimulus: repo_site + 'images/trophy2.jpeg',
     prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>" +
     "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
     }
