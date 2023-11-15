@@ -29,7 +29,12 @@ var images = [
     "instructions/Slide18.png",
     "instructions/Slide19.png",
     "instructions/Slide20.png",
-    "timeout1_nobg.png"
+    "instructions/Slide21.png",
+    "instructions/Slide22.png",
+    "instructions/Slide23.png",
+    "instructions/Slide24.png",
+    "timeout1_nobg.png",
+    "trophy2.jpeg"
     ]
     
 var preload_images=[];
@@ -56,6 +61,19 @@ var take_a_break = {
     prompt: "Press any key when you're ready to continue"
 };
 
+var start_a_new_block = {
+    type: "html-keyboard-response",
+    stimulus: 'Now you are playing a different deck. Figure out which deck it is to help you find the better card.',
+    prompt: "Press any key when you're ready to continue"
+};
+
+var trophy = {
+    type: 'image-keyboard-response',
+    stimulus: repo_site + 'img/trophy2.jpeg',
+    prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>" +
+    "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
+    }
+
 timeline.push(welcome);
 
 let inst = {
@@ -67,7 +85,7 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide3.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide4.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide5.png"></img>',
-    //'<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide6.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide6.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide7.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide8.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide9.png"></img>',
@@ -86,7 +104,7 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide22.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide23.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide24.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>'],
+    // '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>'],
     show_clickable_nav: true
 };
 
@@ -308,6 +326,13 @@ function build_and_run_experiment() {
         ordered_blocks[0].length,
         ordered_blocks[0].length + ordered_blocks[1].length
     ];
+
+    // need to know when it's time to insert intro message for a new block
+    block_intro = [0, 
+        ordered_blocks[0].length,
+        ordered_blocks[0].length + ordered_blocks[1].length
+    ];
+
     box_vals = ordered_blocks.flat()
     
     let display_boxes = function ({val1, val2, opt1Left, reward_total, selected, feedback, practice = false} = {}) {
@@ -794,5 +819,11 @@ function build_and_run_experiment() {
             // time to take a break
             timeline.push(take_a_break);
         }
+        if(block_intro.includes(blocks[i])){
+            // time to introduce to a new block
+            timeline.push(start_a_new_block);
+        }
     }
 }
+
+    timeline.push(trophy);            // trophy slide
