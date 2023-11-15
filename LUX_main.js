@@ -103,8 +103,8 @@ pages: [
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide21.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide22.png"></img>',
     '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide23.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide24.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>'],
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>',
+    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide24.png"></img>'],
     show_clickable_nav: true
 };
 
@@ -777,7 +777,7 @@ function build_and_run_experiment() {
     // timeline.push({
     //     type: "html-keyboard-response",
     //     stimulus: "<p>Let's start with some practice trials.</p>" + 
-    //         "<p>Pay attention to how the 3 sets of cards are different.</p>",
+    //         "<p>Pay attention to how the 3 decks of cards are different.</p>",
     //     prompt: "Press any key when you're ready to begin!"
     // });
     // for (let i=1; i < blocks.length; i++){
@@ -795,13 +795,14 @@ function build_and_run_experiment() {
     timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Great practice!  Now let's begin the real task.</p>" +
-            "<p>Remember, there will be 3 sets of cards with different background colors.</p>" +
-            "<p>You will have a break after each set.</p>",
+            "<p>Remember, there will be 3 decks of cards.</p>" +
+            "<p>You will have a break after each deck.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    blocks = [0, 15, 35, 55];  //, 190, 210];
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
