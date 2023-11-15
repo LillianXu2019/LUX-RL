@@ -70,8 +70,9 @@ var start_a_new_block = {
 var trophy = {
     type: 'image-keyboard-response',
     stimulus: repo_site + 'images/trophy2.jpeg',
-    prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>" +
-    "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
+    prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>" 
+    // +
+    // "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
     }
 
 timeline.push(welcome);
@@ -801,8 +802,7 @@ function build_and_run_experiment() {
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
-    blocks = [0, 15, 35, 55];  //, 190, 210];
+    blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
