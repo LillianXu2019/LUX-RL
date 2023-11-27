@@ -775,23 +775,23 @@ function build_and_run_experiment() {
     }
 
     let blocks = [0, 8, 15, 23, 30, 38, 45];
-    // timeline.push({
-    //     type: "html-keyboard-response",
-    //     stimulus: "<p>Let's start with some practice trials.</p>" + 
-    //         "<p>Pay attention to how the 3 decks of cards are different.</p>",
-    //     prompt: "Press any key when you're ready to begin!"
-    // });
-    // for (let i=1; i < blocks.length; i++){
-    //     timeline.push({
-    //         timeline: trial,
-    //         timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
-    //         data: { phase: 'practice' }
-    //     });
-    //     timeline.push({
-    //         timeline: [manipulation_check_procedure],
-    //         data: { phase: 'practice' }
-    //     });
-    // }
+    timeline.push({
+        type: "html-keyboard-response",
+        stimulus: "<p>Let's start with some practice trials.</p>" + 
+            "<p>Pay attention to how the 3 decks of cards are different.</p>",
+        prompt: "Press any key when you're ready to begin!"
+    });
+    for (let i=1; i < blocks.length; i++){
+        timeline.push({
+            timeline: trial,
+            timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
+            data: { phase: 'practice' }
+        });
+        timeline.push({
+            timeline: [manipulation_check_procedure],
+            data: { phase: 'practice' }
+        });
+    }
 
     timeline.push({
         type: "html-keyboard-response",
