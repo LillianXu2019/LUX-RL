@@ -64,13 +64,19 @@ var take_a_break = {
 var start_a_new_block = {
     type: "html-keyboard-response",
     stimulus: 'Now you are playing a different deck. Figure out which deck it is to help you find the better card.',
-    prompt: "Press any key when you're ready to continue"
+    prompt: "Press any key when you're ready to continue",
+    on_start: function(){
+        setBackgroundColorWhite();
+    }
 };
 
 var trophy = {
     type: 'image-keyboard-response',
     stimulus: repo_site + 'images/trophy2.jpeg',
-    prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>" 
+    prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>",
+    on_start: function(){
+        setBackgroundColorWhite();
+    }
     // +
     // "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
     }
@@ -140,6 +146,10 @@ let block_colors = {
 function setBackgroundColor(block){
     document.getElementById('display_stage').style.backgroundColor = block_colors[block];
     //document.body.style.backgroundColor = block_colors[block];
+}
+
+function setBackgroundColorWhite(){
+    document.getElementById('display_stage').style.backgroundColor = '#ffffff';
 }
 
 // load schedules
