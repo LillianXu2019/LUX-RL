@@ -333,13 +333,13 @@ function build_and_run_experiment() {
     }
 
     // need to know when it's time to take a break between blocks
-    block_breaks = [
+    let block_breaks = [
         ordered_blocks[0].length,
         ordered_blocks[0].length + ordered_blocks[1].length
     ];
 
     // need to know when it's time to insert intro message for a new block
-    block_intro = [0, 
+    let block_intro = [1,
         ordered_blocks[0].length,
         ordered_blocks[0].length + ordered_blocks[1].length
     ];
@@ -438,6 +438,10 @@ function build_and_run_experiment() {
                             valRight = val1;
                         }
 
+                        data.block_type = jsPsych.timelineVariable('block', true);
+                        data.left_star = valLeft;
+                        data.right_star = valRight;
+
                         data.rewarded_side = 'both';
                         if (data.key_press === 37) {
                             data.selected_side = 'left';
@@ -461,6 +465,7 @@ function build_and_run_experiment() {
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
+                                data.block_type = jsPsych.timelineVariable('block', true);
                                 data.reward = timeout_penalty;
                             }
                         },
@@ -493,6 +498,10 @@ function build_and_run_experiment() {
                                     valLeft = val2;
                                     valRight = val1;
                                 }
+
+                                data.block_type = jsPsych.timelineVariable('block', true);
+                                data.left_star = valLeft;
+                                data.right_star = valRight;
 
                                 data.rewarded_side = 'both';
                                 if (data.key_press === 37) {
@@ -552,6 +561,10 @@ function build_and_run_experiment() {
                             valRight = val1;
                         }
 
+                        data.block_type = jsPsych.timelineVariable('block', true);
+                        data.left_star = valLeft;
+                        data.right_star = valRight;
+
                         data.rewarded_side = 'both';
                         if (data.key_press === 37) {
                             data.selected_side = 'left';
@@ -575,6 +588,7 @@ function build_and_run_experiment() {
                             choices: jsPsych.NO_KEYS,
                             trial_duration: warning_duration,
                             on_finish: function(data) {
+                                data.block_type = jsPsych.timelineVariable('block', true);
                                 data.reward = timeout_penalty;
                             }
                         }
@@ -623,6 +637,10 @@ function build_and_run_experiment() {
                     valLeft = val2;
                     valRight = val1;
                 }
+
+                data.block_type = jsPsych.timelineVariable('block', true);
+                data.left_star = valLeft;
+                data.right_star = valRight;
 
                 data.rewarded_side = 'both';
                 if (data.key_press === 37) {
@@ -834,7 +852,7 @@ function build_and_run_experiment() {
             // time to introduce to a new block
             timeline.push(start_a_new_block);
         }
-        if(i == blocks.length-1){
+        if(i === blocks.length-1){
             timeline.push(trophy); // trophy slide
         }
     }
