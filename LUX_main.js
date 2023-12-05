@@ -45,8 +45,8 @@ for (var k = 0; k < images.length; k++) {
 let timeline = [];
 
 /* Enter subject id */
-var subject_id = jsPsych.data.getURLVariable('participantID')
-jsPsych.data.addProperties({subject: subject_id});
+// var subject_id = jsPsych.data.getURLVariable('participantID')
+// jsPsych.data.addProperties({subject: subject_id});
 // enter full screen
 var welcome = {
     type: "fullscreen",
@@ -803,12 +803,16 @@ function build_and_run_experiment() {
     }
 
     let blocks = [0, 8, 15, 23, 30, 38, 45];
+    let practice_breaks = [15, 30];
     timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Let's start with some practice trials.</p>" + 
             "<p>Pay attention to how the 3 decks of cards are different.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
+
+    // introduce the first practice block
+    timeline.push(start_a_new_block);
     for (let i=1; i < blocks.length; i++){
         timeline.push({
             timeline: trial,
@@ -819,6 +823,11 @@ function build_and_run_experiment() {
             timeline: [manipulation_check_procedure],
             data: { phase: 'practice' }
         });
+        if(practice_breaks.includes(blocks[i])){
+            // time to introduce to a new block
+            timeline.push(start_a_new_block);
+        }
+
     }
 
     timeline.push({
@@ -831,6 +840,9 @@ function build_and_run_experiment() {
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
     blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+
+    // introduce the first block
+    timeline.push(start_a_new_block);
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
@@ -847,11 +859,10 @@ function build_and_run_experiment() {
         if(block_breaks.includes(blocks[i])){
             // time to take a break
             timeline.push(take_a_break);
-        }
-        if(block_intro.includes(blocks[i])){
             // time to introduce to a new block
             timeline.push(start_a_new_block);
         }
+
         if(i === blocks.length-1){
             timeline.push(trophy); // trophy slide
         }
