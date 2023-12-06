@@ -50,11 +50,13 @@ Qualtrics.SurveyEngine.addOnload(function () {
 
     var task_name = "reward-learning";
     var save_url = "https://experiment.childemotion.waisman.wisc.edu/save_data.php";
-    var subject_id = "${e://Field/participantID}";
+
+    var child_id = "${e://Field/child_id}";
+    var response_id = "${e://Field/response_id}";
+
+    //var subject_id = "${e://Field/participantID}";
     var data_dir = task_name;
-    var file_name = task_name + '_' + subject_id;
-
-
+    var file_name = task_name + '_' + child_id + '-' + response_id;
 
     function save_data_json() {
         jQuery.ajax({
@@ -95,28 +97,9 @@ Qualtrics.SurveyEngine.addOnload(function () {
             display_element: 'display_stage',
             on_finish: function (data) {
 
-                jsPsych.data.get().addToLast({participant: subject_id});
+                jsPsych.data.get().addToAll({child_id: child_id, response_id: response_id});
                 save_data_csv();
 
-
-                /* Change 5: Summarizing and save the results to Qualtrics */
-                // summarize the results
-                /*
-                               var trials = jsPsych.data.get().filter({
-                                   test_part: 'test'
-                               });
-
-                               var correct_trials = trials.filter({
-                                  correct: true
-                               });
-                               var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
-                               var rt = Math.round(correct_trials.select('rt').mean());
-
-                               // save to qualtrics embedded data
-                               Qualtrics.SurveyEngine.setEmbeddedData("accuracy", accuracy);
-                               Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
-               */
-                /* Change 6: Adding the clean up and continue functions.*/
                 // clear the stage
                 jQuery('#display_stage').remove();
                 jQuery('#display_stage_background').remove();
