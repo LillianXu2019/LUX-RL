@@ -784,24 +784,24 @@ function build_and_run_experiment() {
         practice_trials = [practice_stable, practice_stochastic, practice_volatile].flat();
     }
 
-    let blocks = [0, 8, 15, 23, 30, 38, 45];
-    timeline.push({
-        type: "html-keyboard-response",
-        stimulus: "<p>Let's start with some practice trials.</p>" + 
-            "<p>Pay attention to how the 3 decks of cards are different.</p>",
-        prompt: "Press any key when you're ready to begin!"
-    });
-    for (let i=1; i < blocks.length; i++){
-        timeline.push({
-            timeline: trial,
-            timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
-            data: { phase: 'practice' }
-        });
-        timeline.push({
-            timeline: [manipulation_check_procedure],
-            data: { phase: 'practice' }
-        });
-    }
+    // let blocks = [0, 8, 15, 23, 30, 38, 45];
+    // timeline.push({
+    //     type: "html-keyboard-response",
+    //     stimulus: "<p>Let's start with some practice trials.</p>" + 
+    //         "<p>Pay attention to how the 3 decks of cards are different.</p>",
+    //     prompt: "Press any key when you're ready to begin!"
+    // });
+    // for (let i=1; i < blocks.length; i++){
+    //     timeline.push({
+    //         timeline: trial,
+    //         timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
+    //         data: { phase: 'practice' }
+    //     });
+    //     timeline.push({
+    //         timeline: [manipulation_check_procedure],
+    //         data: { phase: 'practice' }
+    //     });
+    // }
 
     timeline.push({
         type: "html-keyboard-response",
@@ -812,7 +812,8 @@ function build_and_run_experiment() {
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    blocks = [0, 15, 35, 55];  //, 190, 210];
 
     for (let i=1; i < blocks.length; i++){
         timeline.push({
