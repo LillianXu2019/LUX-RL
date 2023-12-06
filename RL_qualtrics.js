@@ -56,7 +56,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
 
     //var subject_id = "${e://Field/participantID}";
     var data_dir = task_name;
-    var file_name = task_name + '_' + child_id + '-' + response_id;
+    var file_name = task_name + '_' + child_id;
 
     function save_data_json() {
         jQuery.ajax({
