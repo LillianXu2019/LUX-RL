@@ -51,8 +51,8 @@ Qualtrics.SurveyEngine.addOnload(function () {
     var task_name = "reward-learning";
     var save_url = "https://experiment.childemotion.waisman.wisc.edu/save_data.php";
 
-    var child_id = "${e://Field/child_id}";
-    var response_id = "${e://Field/response_id}";
+    var child_id = "${e://Field/child}";
+    var response_id = "${e://Field/response}";
 
     //var subject_id = "${e://Field/participantID}";
     var data_dir = task_name;
