@@ -868,8 +868,8 @@ function build_and_run_experiment() {
         if(i === blocks.length-1){
             timeline.push(trophy); // trophy slide
         }
-        */
     }
+    */
 }
 
     
