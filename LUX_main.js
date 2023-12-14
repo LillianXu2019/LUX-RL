@@ -804,6 +804,8 @@ function build_and_run_experiment() {
 
     let blocks = [0, 8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
+
+    /*
     timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Let's start with some practice trials.</p>" + 
@@ -866,6 +868,7 @@ function build_and_run_experiment() {
         if(i === blocks.length-1){
             timeline.push(trophy); // trophy slide
         }
+        */
     }
 }
 
