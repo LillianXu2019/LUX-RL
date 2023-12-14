@@ -2,12 +2,16 @@
 
 // define the site that hosts stimuli images
 // usually https://<your-github-username>.github.io/<your-experiment-name>/
-var repo_site = "https://LillianXu2019.github.io/LUX-RL/";
+
+var g = {};  // put everything in a namespace variable
+
+g.repo_site = "https://LillianXu2019.github.io/LUX-RL/";
+
 
 /* preload images */
-var imageExt = repo_site + 'images/'
+g.imageExt = g.repo_site + 'images/'
 
-var images = [
+g.images = [
     "instructions/Slide1.png",
     "instructions/Slide2.png",
     "instructions/Slide3.png",
@@ -37,31 +41,31 @@ var images = [
     "trophy2.jpeg"
     ]
     
-var preload_images=[];
-for (var k = 0; k < images.length; k++) {
-    preload_images.push(imageExt+images[k]);
+g.preload_images=[];
+for (var k = 0; k < g.images.length; k++) {
+    g.preload_images.push(g.imageExt+g.images[k]);
 };
 
-let timeline = [];
+g.timeline = [];
 
 /* Enter subject id */
 // var subject_id = jsPsych.data.getURLVariable('participantID')
 // jsPsych.data.addProperties({subject: subject_id});
 // enter full screen
-var welcome = {
+g.welcome = {
     type: "fullscreen",
     message: "Now you are entering the full screen mode.<br>",
     button_label: "Click here to proceed.",
     delay_after: 500
 }
 
-var take_a_break = {
+g.take_a_break = {
     type: "html-keyboard-response",
     stimulus: 'Time for a break!',
     prompt: "Press any key when you're ready to continue"
 };
 
-var start_a_new_block = {
+g.start_a_new_block = {
     type: "html-keyboard-response",
     stimulus: 'Now you are playing a different deck. Figure out which deck it is to help you find the better card.',
     prompt: "Press any key when you're ready to continue",
@@ -70,9 +74,9 @@ var start_a_new_block = {
     }
 };
 
-var trophy = {
+g.trophy = {
     type: 'image-keyboard-response',
-    stimulus: repo_site + 'images/trophy2.jpeg',
+    stimulus: g.repo_site + 'images/trophy2.jpeg',
     prompt: "<p style = 'font-size: 25px'>Great job! You've got a trophy!</p>",
     on_start: function(){
         setBackgroundColorWhite();
@@ -81,70 +85,70 @@ var trophy = {
     // "<p style = 'font-size: 25px'>Press any key to continue to the next part.</p>"
     }
 
-timeline.push(welcome);
+g.timeline.push(g.welcome);
 
-let inst = {
+g.inst = {
 type: 'instructions',
 pages: [
     'Welcome to this game! Please click next or press the right arrow key to begin.',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide1.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide2.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide3.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide4.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide5.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide6.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide7.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide8.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide9.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide10.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide11.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide12.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide13.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide14.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide15.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide16.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide17.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide18.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide19.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide20.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide21.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide22.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide23.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide25.png"></img>',
-    '<img class="instructions-image" src="' + repo_site + 'images/instructions/Slide24.png"></img>'],
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide1.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide2.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide3.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide4.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide5.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide6.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide7.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide8.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide9.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide10.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide11.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide12.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide13.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide14.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide15.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide16.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide17.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide18.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide19.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide20.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide21.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide22.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide23.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide24.png"></img>'],
     show_clickable_nav: true
 };
 
-timeline.push(inst);
+g.timeline.push(g.inst);
     
 // experiment constants
 // Set the following to true to enable Pavlovia
-const runat_pavlovia = false;  // set to false for running locally, true for running at Pavlovia
-const timeout_penalty = -10;  // amount of "reward" for a timeout.  Make negative to deduct points from total.
-const timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeout mode is deactivated.
+g.runat_pavlovia = false;  // set to false for running locally, true for running at Pavlovia
+g.timeout_penalty = -10;  // amount of "reward" for a timeout.  Make negative to deduct points from total.
+g.timeout_mode = 'once';  // set to 'once' or 'infinite'.  Otherwise, timeout mode is deactivated.
 
-const response_duration = 2000; // duration (ms) for a response before timeout, if timeout is enabled
-const warning_duration = 2000;  // duration (ms) of warning icon after a timeout
-const display_choice_duration = 1000;  // duration (ms) to display choice before showing feedback
-const feedback_duration = 1000; // duration (ms) to display choice together with rewarded side
+g.response_duration = 2000; // duration (ms) for a response before timeout, if timeout is enabled
+g.warning_duration = 2000;  // duration (ms) of warning icon after a timeout
+g.display_choice_duration = 1000;  // duration (ms) to display choice before showing feedback
+g.feedback_duration = 1000; // duration (ms) to display choice together with rewarded side
 
 // randomly assign colors to box1/box2
-let box_color_classes = ['color-a', 'color-b'];
-box_color_classes = jsPsych.randomization.repeat(box_color_classes, 1);
-let box1_class = box_color_classes[0];
-let box2_class = box_color_classes[1];
+g.box_color_classes = ['color-a', 'color-b'];
+g.box_color_classes = jsPsych.randomization.repeat(g.box_color_classes, 1);
+g.box1_class = g.box_color_classes[0];
+g.box2_class = g.box_color_classes[1];
 
 // randomly assign background colors to blocks
-let background_colors = ['#fff0eb', '#edffeb', '#ebf3ff'];
-background_colors = jsPsych.randomization.repeat(background_colors, 1);
-let block_colors = {
-    stable: background_colors[0],
-    stochastic: background_colors[1],
-    volatile: background_colors[2]
+g.background_colors = ['#fff0eb', '#edffeb', '#ebf3ff'];
+g.background_colors = jsPsych.randomization.repeat(g.background_colors, 1);
+g.block_colors = {
+    stable: g.background_colors[0],
+    stochastic: g.background_colors[1],
+    volatile: g.background_colors[2]
 }
 
 function setBackgroundColor(block){
-    document.getElementById('display_stage').style.backgroundColor = block_colors[block];
+    document.getElementById('display_stage').style.backgroundColor = g.block_colors[block];
     //document.body.style.backgroundColor = block_colors[block];
 }
 
@@ -153,14 +157,14 @@ function setBackgroundColorWhite(){
 }
 
 // load schedules
-let schedule_stable;
-let schedule_stochastic;
-let schedule_volatile;
-let max_possible_points = 0;
-let max_practice_points = 0;
-let practice_stable;
-let practice_stochastic;
-let practice_volatile;
+g.schedule_stable;
+g.schedule_stochastic;
+g.schedule_volatile;
+g.max_possible_points = 0;
+g.max_practice_points = 0;
+g.practice_stable;
+g.practice_stochastic;
+g.practice_volatile;
 
 // https://observablehq.com/@chrispahm/skew-normal-distributions
 function randomTruncSkewNormal({
@@ -228,9 +232,9 @@ function generate_schedules() {
         let box2_val = box1_val - 5;
         for (let i=0; i<n; i++){
             if (practice) {
-                max_practice_points += Math.max(box1_val, box2_val);
+                g.max_practice_points += Math.max(box1_val, box2_val);
             } else {
-                max_possible_points += Math.max(box1_val, box2_val);
+                g.max_possible_points += Math.max(box1_val, box2_val);
             }
 
             schedule.push({
@@ -243,8 +247,8 @@ function generate_schedules() {
         }
         return schedule;
     }
-    schedule_stable = generate_stable(35);
-    practice_stable = generate_stable(15, true);
+    g.schedule_stable = generate_stable(35);
+    g.practice_stable = generate_stable(15, true);
 
     function generate_stochastic(n, practice=false){
         let schedule = []
@@ -252,9 +256,9 @@ function generate_schedules() {
             let box1_val = randomInt(5, 15);
             let box2_val = randomInt(0, 10);
             if (practice) {
-                max_practice_points += Math.max(box1_val, box2_val);
+                g.max_practice_points += Math.max(box1_val, box2_val);
             } else {
-                max_possible_points += Math.max(box1_val, box2_val);
+                g.max_possible_points += Math.max(box1_val, box2_val);
             }
             schedule.push({
                 block: 'stochastic',
@@ -266,8 +270,8 @@ function generate_schedules() {
         }
         return schedule;
     }
-    schedule_stochastic = generate_stochastic(70);
-    practice_stochastic = generate_stochastic(15, true);
+    g.schedule_stochastic = generate_stochastic(70);
+    g.practice_stochastic = generate_stochastic(15, true);
 
     function generate_volatile(block_list, practice=false){
         let schedule = [];
@@ -285,9 +289,9 @@ function generate_schedules() {
             flipper = !flipper;
             for (let i=0; i<block_list[j]; i++){
                 if (practice) {
-                    max_practice_points += Math.max(box1_val, box2_val);
+                    g.max_practice_points += Math.max(box1_val, box2_val);
                 } else {
-                    max_possible_points += Math.max(box1_val, box2_val);
+                    g.max_possible_points += Math.max(box1_val, box2_val);
                 }
                 schedule.push({
                     block: 'volatile',
@@ -301,8 +305,8 @@ function generate_schedules() {
         return schedule;
     }
 
-    schedule_volatile = generate_volatile([20, 15, 20, 15]);
-    practice_volatile = generate_volatile([8, 7], true);
+    g.schedule_volatile = generate_volatile([20, 15, 20, 15]);
+    g.practice_volatile = generate_volatile([8, 7], true);
 
 }
 
@@ -313,22 +317,22 @@ function build_and_run_experiment() {
     let break_breaks;
     switch(Math.floor(Math.random() * 6)) {
         case 0:
-            ordered_blocks = [schedule_stable, schedule_stochastic, schedule_volatile];
+            ordered_blocks = [g.schedule_stable, g.schedule_stochastic, g.schedule_volatile];
             break;
         case 1:
-            ordered_blocks = [schedule_stable, schedule_volatile, schedule_stochastic];
+            ordered_blocks = [g.schedule_stable, g.schedule_volatile, g.schedule_stochastic];
             break;
         case 2:
-            ordered_blocks = [schedule_stochastic, schedule_volatile, schedule_stable];
+            ordered_blocks = [g.schedule_stochastic, g.schedule_volatile, g.schedule_stable];
             break;
         case 3:
-            ordered_blocks = [schedule_stochastic, schedule_stable, schedule_volatile];
+            ordered_blocks = [g.schedule_stochastic, g.schedule_stable, g.schedule_volatile];
             break;
         case 4:
-            ordered_blocks = [schedule_volatile, schedule_stable, schedule_stochastic];
+            ordered_blocks = [g.schedule_volatile, g.schedule_stable, g.schedule_stochastic];
             break;
         case 5:
-            ordered_blocks = [schedule_volatile, schedule_stochastic, schedule_stable];
+            ordered_blocks = [g.schedule_volatile, g.schedule_stochastic, g.schedule_stable];
             break;
     }
 
@@ -357,13 +361,13 @@ function build_and_run_experiment() {
         if(opt1Left === 1){
             valLeft = val1;
             valRight = val2;
-            classLeft = box1_class;
-            classRight = box2_class;
+            classLeft = g.box1_class;
+            classRight = g.box2_class;
         } else {
             valLeft = val2;
             valRight = val1;
-            classLeft = box2_class;
-            classRight = box1_class;
+            classLeft = g.box2_class;
+            classRight = g.box1_class;
         }
 
         // if feedback is not undefined, show stars on the appropriate side
@@ -388,9 +392,9 @@ function build_and_run_experiment() {
         string_parts.push('<div class="reward_points">' + reward_total + '</div>');
         string_parts.push('<div class="reward_bar_border"><div class="reward_bar" style="width:');
         if (practice) {
-            string_parts.push(reward_total / max_practice_points * 100);
+            string_parts.push(reward_total / g.max_practice_points * 100);
         } else {
-            string_parts.push(reward_total / max_possible_points * 100);
+            string_parts.push(reward_total / g.max_possible_points * 100);
         }
         string_parts.push('%;"></div></div>');
         return string_parts.join('')
@@ -403,7 +407,7 @@ function build_and_run_experiment() {
     */
 
     let step1;
-    if(timeout_mode === 'once') {
+    if(g.timeout_mode === 'once') {
         // timeout once, then wait for response indefinitely
         step1 = {
             timeline: [
@@ -454,19 +458,19 @@ function build_and_run_experiment() {
                             data.reward = 0;
                         }
                     },
-                    trial_duration: response_duration
+                    trial_duration: g.response_duration
                 },
                 {
                     timeline: [
                         // display warning icon and apply penalty to points
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src="' + repo_site + 'images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src="' + g.repo_site + 'images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
                             choices: jsPsych.NO_KEYS,
-                            trial_duration: warning_duration,
+                            trial_duration: g.warning_duration,
                             on_finish: function(data) {
                                 data.block_type = jsPsych.timelineVariable('block', true);
-                                data.reward = timeout_penalty;
+                                data.reward = g.timeout_penalty;
                             }
                         },
 
@@ -578,18 +582,18 @@ function build_and_run_experiment() {
                         }
 
                     },
-                    trial_duration: response_duration
+                    trial_duration: g.response_duration
                 },
                 {
                     timeline: [
                         {
                             type: 'html-keyboard-response',
-                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + repo_site + '"images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
+                            stimulus: '<img class="timeout-image" alt="warning icon" src=' + g.repo_site + '"images/timeout1_nobg.png"><br><h2>10 points off!</h2>',
                             choices: jsPsych.NO_KEYS,
-                            trial_duration: warning_duration,
+                            trial_duration: g.warning_duration,
                             on_finish: function(data) {
                                 data.block_type = jsPsych.timelineVariable('block', true);
-                                data.reward = timeout_penalty;
+                                data.reward = g.timeout_penalty;
                             }
                         }
                     ],
@@ -682,7 +686,7 @@ function build_and_run_experiment() {
                     reward_total: reward_total - current_reward, selected: d.selected_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
-            trial_duration: display_choice_duration
+            trial_duration: g.display_choice_duration
         },
 
         // display response and rewarded side, along with updated points total
@@ -699,7 +703,7 @@ function build_and_run_experiment() {
                 return display_boxes({val1, val2, opt1Left, reward_total, selected: d.selected_side, feedback: d.rewarded_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
-            trial_duration: feedback_duration
+            trial_duration: g.feedback_duration
         },
     ]
 
@@ -797,14 +801,14 @@ function build_and_run_experiment() {
     // practice trials
     let practice_trials;
     if (Math.random() > 0.5) {
-        practice_trials = [practice_stable, practice_volatile, practice_stochastic].flat();
+        practice_trials = [g.practice_stable, g.practice_volatile, g.practice_stochastic].flat();
     } else {
-        practice_trials = [practice_stable, practice_stochastic, practice_volatile].flat();
+        practice_trials = [g.practice_stable, g.practice_stochastic, g.practice_volatile].flat();
     }
 
     let blocks = [0, 8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
-    timeline.push({
+    g.timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Let's start with some practice trials.</p>" + 
             "<p>Pay attention to how the 3 decks of cards are different.</p>",
@@ -812,25 +816,25 @@ function build_and_run_experiment() {
     });
 
     // introduce the first practice block
-    timeline.push(start_a_new_block);
+    g.timeline.push(g.start_a_new_block);
     for (let i=1; i < blocks.length; i++){
-        timeline.push({
+        g.timeline.push({
             timeline: trial,
             timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
             data: { phase: 'practice' }
         });
-        timeline.push({
+        g.timeline.push({
             timeline: [manipulation_check_procedure],
             data: { phase: 'practice' }
         });
         if(practice_breaks.includes(blocks[i])){
             // time to introduce to a new block
-            timeline.push(start_a_new_block);
+            g.timeline.push(g.start_a_new_block);
         }
 
     }
 
-    timeline.push({
+    g.timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Great practice!  Now let's begin the real task.</p>" +
             "<p>Remember, there will be 3 decks of cards.</p>" +
@@ -842,29 +846,29 @@ function build_and_run_experiment() {
     blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
 
     // introduce the first block
-    timeline.push(start_a_new_block);
+    g.timeline.push(g.start_a_new_block);
 
     for (let i=1; i < blocks.length; i++){
-        timeline.push({
+        g.timeline.push({
             timeline: trial,
             timeline_variables: box_vals.slice(blocks[i-1], blocks[i]),
             data: { phase: 'test' }
         });
         //timeline.push(manipulation_check_procedure);
-        timeline.push({
+        g.timeline.push({
             timeline: [manipulation_check_procedure],
             data: { phase: 'test' }
         });
 
         if(block_breaks.includes(blocks[i])){
             // time to take a break
-            timeline.push(take_a_break);
+            g.timeline.push(g.take_a_break);
             // time to introduce to a new block
-            timeline.push(start_a_new_block);
+            g.timeline.push(g.start_a_new_block);
         }
 
         if(i === blocks.length-1){
-            timeline.push(trophy); // trophy slide
+            g.timeline.push(g.trophy); // trophy slide
         }
     }
 }

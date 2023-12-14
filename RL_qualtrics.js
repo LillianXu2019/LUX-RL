@@ -92,8 +92,8 @@ Qualtrics.SurveyEngine.addOnload(function () {
         build_and_run_experiment();
 
         jsPsych.init({
-            timeline: timeline,
-            preload_images: preload_images,
+            timeline: g.timeline,
+            preload_images: g.preload_images,
             display_element: 'display_stage',
             on_finish: function (data) {
 
@@ -118,5 +118,5 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
 Qualtrics.SurveyEngine.addOnUnload(function () {
     /*Place your JavaScript here to run when the page is unloaded*/
-
+    g = undefined;
 });
