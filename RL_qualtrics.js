@@ -96,8 +96,12 @@ Qualtrics.SurveyEngine.addOnload(function () {
             preload_images: preload_images,
             display_element: 'display_stage',
             on_finish: function (data) {
+                var today = new Date();
+                var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                var dateTime = date+' '+time;
 
-                jsPsych.data.get().addToAll({child_id: child_id, response_id: response_id});
+                jsPsych.data.get().addToAll({subject: subject_id, timestamp: dateTime});
                 save_data_csv();
 
                 // clear the stage
