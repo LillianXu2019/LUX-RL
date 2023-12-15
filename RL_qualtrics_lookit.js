@@ -122,5 +122,5 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
 Qualtrics.SurveyEngine.addOnUnload(function () {
     /*Place your JavaScript here to run when the page is unloaded*/
-
+    g = undefined;
 });
