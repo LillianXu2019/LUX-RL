@@ -51,12 +51,12 @@ Qualtrics.SurveyEngine.addOnload(function () {
     var task_name = "reward-learning";
     var save_url = "https://experiment.childemotion.waisman.wisc.edu/save_data.php";
 
-    //var child_id = "${e://Field/child}";
+    var child_id = "${e://Field/child}";
     //var response_id = "${e://Field/response}";
 
-    var subject_id = "${e://Field/participantID}";
+    //var subject_id = "${e://Field/participantID}";
     var data_dir = task_name;
-    var file_name = task_name + '_' + subject_id;
+    var file_name = task_name + '_' + child_id;
 
     function save_data_json() {
         jQuery.ajax({
@@ -101,7 +101,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
                 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                 var dateTime = date+' '+time;
 
-                jsPsych.data.get().addToAll({subject: subject_id, timestamp: dateTime});
+                jsPsych.data.get().addToAll({subject: child_id, timestamp: dateTime});
                 save_data_csv();
 
                 // clear the stage
@@ -122,5 +122,5 @@ Qualtrics.SurveyEngine.addOnReady(function () {
 
 Qualtrics.SurveyEngine.addOnUnload(function () {
     /*Place your JavaScript here to run when the page is unloaded*/
-	g = undefined;
+    g = undefined;
 });
