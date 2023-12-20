@@ -37,6 +37,12 @@ g.images = [
     "instructions/Slide23.png",
     "instructions/Slide24.png",
     "instructions/Slide25.png",
+    "instructions/Slide26.png",
+    "instructions/Slide27.png",
+    "instructions/Slide28.png",
+    "instructions/Slide29.png",
+    "instructions/Slide31.png",
+    "instructions/Slide32.png",
     "timeout1_nobg.png",
     "trophy2.jpeg"
     ]
@@ -120,6 +126,14 @@ pages: [
 };
 
 g.timeline.push(g.inst);
+
+g.inst_postPractice = {
+type: 'instructions',
+pages: [
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide32.png"></img>',
+    show_clickable_nav: true
+};
     
 // experiment constants
 // Set the following to true to enable Pavlovia
@@ -853,6 +867,9 @@ function build_and_run_experiment() {
         }
 
     }
+
+    g.timeline.push(g.inst_postPractice);
+    
 >>>>>>> ce377fc633b352052b805b76a05e8dc048d4789b
 
     g.timeline.push({
