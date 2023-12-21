@@ -885,7 +885,7 @@ function build_and_run_experiment() {
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
     // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
     // blocks = [0, 15, 35, 55];  //, 190, 210];
-    blocks = [0, 15, 35, 55];  //, 190, 210];
+    blocks = [15, 35, 55];  //, 190, 210];
 
     // introduce the first block
     g.timeline.push(g.start_a_new_block);
