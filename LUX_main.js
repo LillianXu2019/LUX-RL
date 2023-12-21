@@ -843,7 +843,8 @@ function build_and_run_experiment() {
     //     });
     // }
 
-    let blocks = [0, 8, 15, 23, 30, 38, 45];
+    // let blocks = [0, 8, 15, 23, 30, 38, 45];
+    let blocks = [8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
     g.timeline.push({
         type: "html-keyboard-response",
