@@ -73,7 +73,7 @@ g.take_a_break = {
 
 g.start_a_new_block = {
     type: "html-keyboard-response",
-    stimulus: 'Now you are playing a different deck. Figure out which deck it is to help you find the better card.',
+    stimulus: 'Now you are playing a different game. Figure out which game it is to help you find the better card.',
     prompt: "Press any key when you're ready to continue",
     on_start: function(){
         setBackgroundColorWhite();
@@ -828,7 +828,7 @@ function build_and_run_experiment() {
     // timeline.push({
     //     type: "html-keyboard-response",
     //     stimulus: "<p>Let's start with some practice trials.</p>" + 
-    //         "<p>Pay attention to how the 3 decks of cards are different.</p>",
+    //         "<p>Pay attention to how the 3 games are different.</p>",
     //     prompt: "Press any key when you're ready to begin!"
     // });
     // for (let i=1; i < blocks.length; i++){
@@ -848,7 +848,7 @@ function build_and_run_experiment() {
     g.timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Let's start with some practice trials.</p>" + 
-            "<p>Pay attention to how the 3 decks of cards are different.</p>",
+            "<p>Pay attention to how the 3 games are different.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
@@ -877,13 +877,14 @@ function build_and_run_experiment() {
     g.timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Now let's begin the real task.</p>" +
-            "<p>Remember, there will be 3 decks of cards.</p>" +
-            "<p>You will have a break after each deck.</p>",
+            "<p>Remember, there will be 3 different games.</p>" +
+            "<p>You will have a break after each game.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
     // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    // blocks = [0, 15, 35, 55];  //, 190, 210];
     blocks = [0, 15, 35, 55];  //, 190, 210];
 
     // introduce the first block
