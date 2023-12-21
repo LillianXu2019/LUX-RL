@@ -871,12 +871,12 @@ function build_and_run_experiment() {
 
     }
 
-    // g.timeline.push(g.inst_postPractice);
+    g.timeline.push(g.inst_postPractice);
 
 
     g.timeline.push({
         type: "html-keyboard-response",
-        stimulus: "<p>Great practice!  Now let's begin the real task.</p>" +
+        stimulus: "<p>Now let's begin the real task.</p>" +
             "<p>Remember, there will be 3 decks of cards.</p>" +
             "<p>You will have a break after each deck.</p>",
         prompt: "Press any key when you're ready to begin!"
