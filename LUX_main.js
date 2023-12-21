@@ -872,8 +872,7 @@ function build_and_run_experiment() {
     }
 
     // g.timeline.push(g.inst_postPractice);
-    
->>>>>>> ce377fc633b352052b805b76a05e8dc048d4789b
+
 
     g.timeline.push({
         type: "html-keyboard-response",
