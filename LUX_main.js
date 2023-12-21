@@ -37,6 +37,12 @@ g.images = [
     "instructions/Slide23.png",
     "instructions/Slide24.png",
     "instructions/Slide25.png",
+    "instructions/Slide26.png",
+    "instructions/Slide27.png",
+    "instructions/Slide28.png",
+    "instructions/Slide29.png",
+    "instructions/Slide31.png",
+    "instructions/Slide32.png",
     "timeout1_nobg.png",
     "trophy2.jpeg"
     ]
@@ -67,7 +73,7 @@ g.take_a_break = {
 
 g.start_a_new_block = {
     type: "html-keyboard-response",
-    stimulus: 'Now you are playing a different deck. Figure out which deck it is to help you find the better card.',
+    stimulus: 'Now you are playing a different game. Figure out which game it is to help you find the better card.',
     prompt: "Press any key when you're ready to continue",
     on_start: function(){
         setBackgroundColorWhite();
@@ -114,12 +120,24 @@ pages: [
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide21.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide22.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide23.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide24.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide24.png"></img>'],
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide26.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide27.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide28.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide29.png"></img>'],
     show_clickable_nav: true
 };
 
 g.timeline.push(g.inst);
+
+g.inst_postPractice = {
+type: 'instructions',
+pages: [
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide32.png"></img>'],
+    show_clickable_nav: true
+};
     
 // experiment constants
 // Set the following to true to enable Pavlovia
@@ -806,12 +824,11 @@ function build_and_run_experiment() {
         practice_trials = [g.practice_stable, g.practice_stochastic, g.practice_volatile].flat();
     }
 
-<<<<<<< HEAD
     // let blocks = [0, 8, 15, 23, 30, 38, 45];
     // timeline.push({
     //     type: "html-keyboard-response",
     //     stimulus: "<p>Let's start with some practice trials.</p>" + 
-    //         "<p>Pay attention to how the 3 decks of cards are different.</p>",
+    //         "<p>Pay attention to how the 3 games are different.</p>",
     //     prompt: "Press any key when you're ready to begin!"
     // });
     // for (let i=1; i < blocks.length; i++){
@@ -825,13 +842,14 @@ function build_and_run_experiment() {
     //         data: { phase: 'practice' }
     //     });
     // }
-=======
-    let blocks = [0, 8, 15, 23, 30, 38, 45];
+
+    // let blocks = [0, 8, 15, 23, 30, 38, 45];
+    let blocks = [8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
     g.timeline.push({
         type: "html-keyboard-response",
         stimulus: "<p>Let's start with some practice trials.</p>" + 
-            "<p>Pay attention to how the 3 decks of cards are different.</p>",
+            "<p>Pay attention to how the 3 games are different.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
@@ -853,19 +871,22 @@ function build_and_run_experiment() {
         }
 
     }
->>>>>>> ce377fc633b352052b805b76a05e8dc048d4789b
+
+    g.timeline.push(g.inst_postPractice);
+
 
     g.timeline.push({
         type: "html-keyboard-response",
-        stimulus: "<p>Great practice!  Now let's begin the real task.</p>" +
-            "<p>Remember, there will be 3 decks of cards.</p>" +
-            "<p>You will have a break after each deck.</p>",
+        stimulus: "<p>Now let's begin the real task.</p>" +
+            "<p>Remember, there will be 3 different games.</p>" +
+            "<p>You will have a break after each game.</p>",
         prompt: "Press any key when you're ready to begin!"
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
     // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
-    blocks = [0, 15, 35, 55];  //, 190, 210];
+    // blocks = [0, 15, 35, 55];  //, 190, 210];
+    blocks = [15, 35, 55];  //, 190, 210];
 
     // introduce the first block
     g.timeline.push(g.start_a_new_block);
