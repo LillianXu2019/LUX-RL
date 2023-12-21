@@ -40,9 +40,9 @@ g.images = [
     "instructions/Slide26.png",
     "instructions/Slide27.png",
     "instructions/Slide28.png",
-    "instructions/Slide29.png",
+    // "instructions/Slide29.png",
     "instructions/Slide31.png",
-    "instructions/Slide32.png",
+    // "instructions/Slide32.png",
     "timeout1_nobg.png",
     "trophy2.jpeg"
     ]
@@ -124,8 +124,8 @@ pages: [
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide26.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide27.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide28.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide29.png"></img>'],
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide28.png"></img>'],
+    // '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide29.png"></img>'],
     show_clickable_nav: true
 };
 
@@ -134,8 +134,8 @@ g.timeline.push(g.inst);
 g.inst_postPractice = {
 type: 'instructions',
 pages: [
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide32.png"></img>'],
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide30.png"></img>',
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>'],
     show_clickable_nav: true
 };
     
