@@ -824,7 +824,6 @@ function build_and_run_experiment() {
         practice_trials = [g.practice_stable, g.practice_stochastic, g.practice_volatile].flat();
     }
 
-<<<<<<< HEAD
     // let blocks = [0, 8, 15, 23, 30, 38, 45];
     // timeline.push({
     //     type: "html-keyboard-response",
@@ -843,7 +842,7 @@ function build_and_run_experiment() {
     //         data: { phase: 'practice' }
     //     });
     // }
-=======
+
     let blocks = [0, 8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
     g.timeline.push({
