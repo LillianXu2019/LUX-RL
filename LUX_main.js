@@ -121,7 +121,7 @@ pages: [
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide22.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide23.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide24.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>'],
+    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide26.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide27.png"></img>',
     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide28.png"></img>'],
