@@ -46,10 +46,20 @@ g.images = [
     "timeout1_nobg.png",
     "trophy2.jpeg"
     ]
-    
+
+g.videos = [
+    "instructions/task_instructions_lux_v5.mp4",
+    "instructions/manipulation_question_inst.mp4",
+]
+
 g.preload_images=[];
 for (var k = 0; k < g.images.length; k++) {
     g.preload_images.push(g.imageExt+g.images[k]);
+};
+
+g.preload_videos = [];
+for (var k = 0; k < g.videos.length; k++) {
+    g.preload_videos.push(g.imageExt+g.videos[k]);
 };
 
 g.timeline = [];
@@ -80,6 +90,16 @@ g.start_a_new_block = {
     }
 };
 
+g.start_a_first_block = {
+    type: "html-keyboard-response",
+    stimulus: 'Figure out which game it is to help you find the better card.',
+    prompt: "Press any key when you're ready to continue",
+    on_start: function(){
+        setBackgroundColorWhite();
+    }
+};
+
+
 g.trophy = {
     type: 'image-keyboard-response',
     stimulus: g.repo_site + 'images/trophy2.jpeg',
@@ -94,40 +114,24 @@ g.trophy = {
 g.timeline.push(g.welcome);
 
 g.inst = {
-type: 'instructions',
-pages: [
-    'Welcome to this game! Please click next or press the right arrow key to begin.',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide1.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide2.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide3.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide4.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide5.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide6.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide7.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide8.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide9.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide10.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide11.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide12.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide13.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide14.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide15.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide16.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide17.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide18.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide19.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide20.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide21.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide22.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide23.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide24.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide25.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide26.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide27.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide28.png"></img>'],
-    // '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide29.png"></img>'],
-    show_clickable_nav: true
+    type: 'video-keyboard-response',
+    sources: [
+        g.imageExt + "instructions/task_instructions_lux_v5.mp4"
+    ],
+    choices: jsPsych.NO_KEYS,
+    controls: true,  // for testing
+    trial_ends_after_video: true
 };
+
+g.manipulation_inst = {
+    type: 'video-keyboard-response',
+    sources: [
+        g.imageExt + "instructions/manipulation_question_inst.mp4",
+    ],
+    choices: jsPsych.NO_KEYS,
+    controls: true,  // for testing
+    trial_ends_after_video: true
+}
 
 g.timeline.push(g.inst);
 
@@ -155,6 +159,12 @@ g.box_color_classes = ['color-a', 'color-b'];
 g.box_color_classes = jsPsych.randomization.repeat(g.box_color_classes, 1);
 g.box1_class = g.box_color_classes[0];
 g.box2_class = g.box_color_classes[1];
+
+// randomize card colors
+g.card_colors_a = jsPsych.randomization.repeat(
+    ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6'], 1);
+g.card_colors_b = jsPsych.randomization.repeat(
+    ['color-7', 'color-8', 'color-9', 'color-10', 'color-11', 'color-12'], 1);
 
 // randomly assign background colors to blocks
 g.background_colors = ['#fff0eb', '#edffeb', '#ebf3ff'];
@@ -240,11 +250,18 @@ function starString(numberOfStars) {
         '</div>';
 }
 
+function get_card_colors(i){
+    if (Math.random() > 0.5) {
+        return [g.card_colors_a[i], g.card_colors_b[i]];
+    } else {
+        return [g.card_colors_b[i], g.card_colors_a[i]];
+    }
+}
 
 // Instead of loading predefined schedules, generate randomly
 function generate_schedules() {
 
-    function generate_stable(n, practice=false) {
+    function generate_stable(card_colors, n, practice=false) {
         let schedule = [];
         let box1_val = randomInt(6, 15);
         let box2_val = box1_val - 5;
@@ -260,15 +277,18 @@ function generate_schedules() {
                 magOpt1: box1_val,
                 magOpt2: box2_val,
                 opt1Left: d3.randomBernoulli(0.5)(),
-                practice: practice
+                practice: practice,
+                color1: card_colors[0],
+                color2: card_colors[1],
+                attention_side: ''
             });
         }
         return schedule;
     }
-    g.schedule_stable = generate_stable(35);
-    g.practice_stable = generate_stable(15, true);
+    g.schedule_stable = generate_stable(get_card_colors(0),35);
+    g.practice_stable = generate_stable(get_card_colors(1), 15, true);
 
-    function generate_stochastic(n, practice=false){
+    function generate_stochastic(card_colors, n, practice=false){
         let schedule = []
         for (let i=0; i<n; i++){
             let box1_val = randomInt(5, 15);
@@ -283,15 +303,18 @@ function generate_schedules() {
                 magOpt1: box1_val,
                 magOpt2: box2_val,
                 opt1Left: d3.randomBernoulli(0.5)(),
-                practice: practice
+                practice: practice,
+                color1: card_colors[0],
+                color2: card_colors[1],
+                attention_side: ''
             });
         }
         return schedule;
     }
-    g.schedule_stochastic = generate_stochastic(70);
-    g.practice_stochastic = generate_stochastic(15, true);
+    g.schedule_stochastic = generate_stochastic(get_card_colors(2), 70);
+    g.practice_stochastic = generate_stochastic(get_card_colors(3),15, true);
 
-    function generate_volatile(block_list, practice=false){
+    function generate_volatile(card_colors, block_list, practice=false){
         let schedule = [];
         let flipper = true;
         let box1_val;
@@ -316,15 +339,18 @@ function generate_schedules() {
                     magOpt1: box1_val,
                     magOpt2: box2_val,
                     opt1Left: d3.randomBernoulli(0.5)(),
-                    practice: practice
+                    practice: practice,
+                    color1: card_colors[0],
+                    color2: card_colors[1],
+                    attention_side: ''
                 });
             }
         }
         return schedule;
     }
 
-    g.schedule_volatile = generate_volatile([20, 15, 20, 15]);
-    g.practice_volatile = generate_volatile([8, 7], true);
+    g.schedule_volatile = generate_volatile(get_card_colors(4),[20, 15, 20, 15]);
+    g.practice_volatile = generate_volatile(get_card_colors(5),[8, 7], true);
 
 }
 
@@ -367,8 +393,17 @@ function build_and_run_experiment() {
     ];
 
     box_vals = ordered_blocks.flat()
+
+    // choose a random trial to be an attention getter
+    let attention_getter = Math.floor(Math.random() * box_vals.length);
+    if (Math.random() > 0.5) {
+        box_vals[attention_getter].attention_side = 'right';
+    } else {
+        box_vals[attention_getter].attention_side = 'left';
+    }
+
     
-    let display_boxes = function ({val1, val2, opt1Left, reward_total, selected, feedback, practice = false} = {}) {
+    let display_boxes = function ({attention_side, box1_color, box2_color, val1, val2, opt1Left, reward_total, selected, feedback, practice = false} = {}) {
         let valLeft;
         let valRight;
         let starsLeft = '';
@@ -379,13 +414,13 @@ function build_and_run_experiment() {
         if(opt1Left === 1){
             valLeft = val1;
             valRight = val2;
-            classLeft = g.box1_class;
-            classRight = g.box2_class;
+            classLeft = box1_color;
+            classRight = box2_color;
         } else {
             valLeft = val2;
             valRight = val1;
-            classLeft = g.box2_class;
-            classRight = g.box1_class;
+            classLeft = box2_color;
+            classRight = box1_color;
         }
 
         // if feedback is not undefined, show stars on the appropriate side
@@ -398,6 +433,14 @@ function build_and_run_experiment() {
         }
 
         let string_parts = []
+        let attention_header;
+        if (attention_side) {
+            attention_header = 'For this turn, please choose the ' + attention_side + ' side.';
+        } else {
+            attention_header = ''
+        }
+        string_parts.push('<div class="trial-header">' + attention_header + '</div>')
+
         string_parts.push('<div class="container"><div class="' + classLeft + ' box');
         if (selected === 'left') string_parts.push(' selected ');
         //if (feedback === 'left') string_parts.push(' highlight ');
@@ -438,7 +481,11 @@ function build_and_run_experiment() {
                         let current_phase = jsPsych.data.get().last().values()[0].phase;
                         let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                         let practice = jsPsych.timelineVariable('practice', true);
-                        return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
+                        let box1_color = jsPsych.timelineVariable('color1', true);
+                        let box2_color = jsPsych.timelineVariable('color2', true);
+                        let attention_side = jsPsych.timelineVariable('attention_side', true);
+                        console.log('Attention side in step 1: ' + attention_side)
+                        return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -502,7 +549,10 @@ function build_and_run_experiment() {
                                 let current_phase = jsPsych.data.get().last().values()[0].phase;
                                 let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                                 let practice = jsPsych.timelineVariable('practice', true);
-                                return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
+                                let box1_color = jsPsych.timelineVariable('color1', true);
+                                let box2_color = jsPsych.timelineVariable('color2', true);
+                                let attention_side = jsPsych.timelineVariable('attention_side', true);
+                                return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
                             },
                             choices: [37, 39],
                             on_finish: function (data) {
@@ -560,7 +610,10 @@ function build_and_run_experiment() {
                         let current_phase = jsPsych.data.get().last().values()[0].phase;
                         let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                         let practice = jsPsych.timelineVariable('practice', true);
-                        return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
+                        let box1_color = jsPsych.timelineVariable('color1', true);
+                        let box2_color = jsPsych.timelineVariable('color2', true);
+                        let attention_side = jsPsych.timelineVariable('attention_side', true);
+                        return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -637,7 +690,10 @@ function build_and_run_experiment() {
                 let current_phase = jsPsych.data.get().last().values()[0].phase;
                 let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                 let practice = jsPsych.timelineVariable('practice', true);
-                return display_boxes({val1, val2, opt1Left, reward_total, practice: practice});
+                let box1_color = jsPsych.timelineVariable('color1', true);
+                let box2_color = jsPsych.timelineVariable('color2', true);
+                let attention_side = jsPsych.timelineVariable('attention_side', true);
+                return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
             },
             choices: [37, 39],
             on_start: function() {
@@ -700,7 +756,9 @@ function build_and_run_experiment() {
                 let current_phase = jsPsych.data.get().last().values()[0].phase;
                 let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                 let current_reward = jsPsych.data.get().last(1).values()[0].reward;
-                return display_boxes({val1, val2, opt1Left,
+                let box1_color = jsPsych.timelineVariable('color1', true);
+                let box2_color = jsPsych.timelineVariable('color2', true);
+                return display_boxes({box1_color, box2_color, val1, val2, opt1Left,
                     reward_total: reward_total - current_reward, selected: d.selected_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
@@ -718,37 +776,41 @@ function build_and_run_experiment() {
                 let current_phase = jsPsych.data.get().last().values()[0].phase;
                 let reward_total = jsPsych.data.get().filter({phase: current_phase}).select('reward').sum();
                 let practice = jsPsych.timelineVariable('practice', true);
-                return display_boxes({val1, val2, opt1Left, reward_total, selected: d.selected_side, feedback: d.rewarded_side, practice: practice});
+                let box1_color = jsPsych.timelineVariable('color1', true);
+                let box2_color = jsPsych.timelineVariable('color2', true);
+                return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, selected: d.selected_side, feedback: d.rewarded_side, practice: practice});
             },
             choices: jsPsych.NO_KEYS,
-            trial_duration: g.feedback_duration
+            trial_duration: g.feedback_duration,
+            on_finish: function(data){
+                // store timeline variables in data for access in the manipulation check procedure
+                data.color1 = jsPsych.timelineVariable('color1', true);
+                data.color2 = jsPsych.timelineVariable('color2', true);
+                data.practice = jsPsych.timelineVariable('practice', true),
+                data.block = jsPsych.timelineVariable('block', true)
+                //console.log('data.color1: ' + data.color1)
+            }
         },
     ]
 
     // Manipulation check
     var manipulation_check_procedure = {
         timeline: [
-            // {
-            //     type: 'survey-multi-choice',
-            //     questions: [
-            //         {
-            //             prompt: "Which box earns you more points?",
-            //             name: 'BetterBox',
-            //             options: ["blue", "green", "I don't know"],
-            //             required: true,
-            //             data: {task: 'check_response'}
-            //         }
-            //     ]
-            // },
-
             {
                     type: 'html-button-response',
-                    choices: ["blue", "green"],
-                    stimulus: '<h2>Which box earns you more points?</h2>',
-                    button_html: [
-                        '<button class="box color-a"></button><h3>%choice%</h3>',
-                        '<button class="box color-b"></button><h3>%choice%</h3>'
-                    ],
+                    choices: ["color1", "color2"],
+                    stimulus: '<h2>Which color card wins in the past few turns?</h2>',
+                    button_html: function(){
+                        let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                        let color1 = recent_trial.color1;
+                        let color2 = recent_trial.color2;
+
+
+                        return [
+                            '<button class="box ' + color1 + '"></button><h3></h3>',
+                            '<button class="box ' + color2 + '"></button><h3></h3>'
+                        ]
+                    },
                     data: { name: 'betterbox' }
             },
 
@@ -756,47 +818,92 @@ function build_and_run_experiment() {
                 timeline: [
                     {
                         type: 'survey-multi-choice',
+                        // questions: [
+                        //         {
+                        //             prompt: "Last time you said this card wins. Did it switch in the past few turns?",
+                        //             name: 'BetterBoxSwitched',
+                        //             options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
+                        //             required: true
+                        //         }
+                        // ],
+
                         questions: function(){
-                            // let better_box_trials = jsPsych.data.get().filterCustom(function(trial){
-                            //     return ('responses' in trial && trial.responses.includes('BetterBox'))
-                            // });
-                            //
-                            // let last_response = JSON.parse(better_box_trials.last().values()[0].responses).BetterBox;
-                            let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
-                            let last_response = (last_response_button === '0') ? 'blue' : 'green';
+                          // simplify question for the first time it appears in a block
+                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                            let current_practice = recent_trial.practice;
+                            let current_block = recent_trial.block;
+                            let prompt;
+                            if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() > 1) {
+                                // this is not the first time these questions have appeared in this block
+                                prompt = "Last time you said this card wins. Did it switch in the past few turns?"
+                            } else {
+                                // this is the first time these questions have appeared in this block, so simplify
+                                prompt = "Did the winning card switch in the past few turns?"
+                            }
                             return [
                                 {
-                                    prompt: "Last time you said the " + last_response + " box earns you more points. Did it switch?",
+                                    prompt: prompt,
                                     name: 'BetterBoxSwitched',
-                                    options: ["Yes", "No", "I don't know"],
+                                    options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
                                     required: true
                                 }
                             ]
+
+                        },
+
+                        preamble: function(){
+                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                            let color1 = recent_trial.color1;
+                            let color2 = recent_trial.color2;
+
+                            let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
+                            let class1, class2;
+                            if (last_response_button === 0) {
+                                class1 = 'boxoutline';
+                                class2 = '';
+                            } else {
+                                class1 = '';
+                                class2 = 'boxoutline';
+                            }
+
+                            // No box outline if this is the first time the question has been asked in this block.
+                            let current_practice = recent_trial.practice;
+                            let current_block = recent_trial.block;
+                            if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() === 1) {
+                                class1 = '';
+                                class2 = '';
+                            }
+
+                            return '<div class="container"><div class="box '  + class1 + ' ' + color1 + '"></div>' +
+                                '<div class="box ' + class2 + ' ' + color2 + '"></div></div>'
+                        },
+                        on_finish: function(data){
+                            // store block info for access later
+                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                            data.practice = recent_trial.practice;
+                            data.block = recent_trial.block;
+                            //console.log('data.color1: ' + data.color1)
                         }
                     }
                 ],
                 conditional_function: function() {
                     // only include this question if BetterBox was previously asked in current phase
-
                     let current_phase = jsPsych.data.get().last().values()[0].phase;
                     return jsPsych.data.get().filter({name: 'betterbox', phase: current_phase}).count() > 1
-                    // return jsPsych.data.get().filterCustom(function(trial){
-                    //     return ('responses' in trial && trial.responses.includes('BetterBox'))
-                    // }).count() > 1
                 }
             },
             {
                 type: 'star-rating',
-                stimulus: "<p>Based on what you see, how many stars will you get from the box that earns you more points?</p>" +
+                stimulus: "<p>Based on what you see, how many stars will you get from the winning card?</p>" +
                     "<p>Click the stars below to tell us your best guess.</p>",
             },
             {
                 type: 'survey-multi-choice',
                 questions: [
                     {
-                        prompt: "How sure are you that your guess is around the actual number?",
+                        prompt: "How confident are you about your guess?",
                         name: 'Confidence',
-                        options: ['I have no idea at all', 'Somewhat confident', 'Moderately confident', 'Mostly confident'],
+                        options: ['I have no idea at all', 'Somewhat confident', 'Moderately confident', 'Very confident'],
                         required: true
                     }
                 ]
@@ -843,7 +950,7 @@ function build_and_run_experiment() {
     //     });
     // }
 
-    // let blocks = [0, 8, 15, 23, 30, 38, 45];
+    //let blocks = [0, 8, 15, 23, 30, 38, 45];
     let blocks = [8, 15, 23, 30, 38, 45];
     let practice_breaks = [15, 30];
     g.timeline.push({
@@ -854,13 +961,16 @@ function build_and_run_experiment() {
     });
 
     // introduce the first practice block
-    g.timeline.push(g.start_a_new_block);
+    g.timeline.push(g.start_a_first_block);
     for (let i=1; i < blocks.length; i++){
         g.timeline.push({
             timeline: trial,
             timeline_variables: practice_trials.slice(blocks[i-1], blocks[i]),
             data: { phase: 'practice' }
         });
+        if (i === 1) {
+            g.timeline.push(g.manipulation_inst);
+        }
         g.timeline.push({
             timeline: [manipulation_check_procedure],
             data: { phase: 'practice' }
@@ -884,12 +994,14 @@ function build_and_run_experiment() {
     });
 
     // 210 trials split into blocks of 20 or 15 with manipulation checks after each block.
-    // blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
+    //blocks = [0, 15, 35, 55, 70, 90, 105, 125, 140, 155, 175];  //, 190, 210];
     // blocks = [0, 15, 35, 55];  //, 190, 210];
-    blocks = [15, 35, 55];  //, 190, 210];
+    //blocks = [15, 35, 55];  //, 190, 210];
+
+    blocks = [0, 20, 35, 55, 70, 90, 105, 125, 140, 160, 175];
 
     // introduce the first block
-    g.timeline.push(g.start_a_new_block);
+    g.timeline.push(g.start_a_first_block);
 
     for (let i=1; i < blocks.length; i++){
         g.timeline.push({
