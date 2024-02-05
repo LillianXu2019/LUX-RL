@@ -484,7 +484,6 @@ function build_and_run_experiment() {
                         let box1_color = jsPsych.timelineVariable('color1', true);
                         let box2_color = jsPsych.timelineVariable('color2', true);
                         let attention_side = jsPsych.timelineVariable('attention_side', true);
-                        console.log('Attention side in step 1: ' + attention_side)
                         return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
                     },
                     choices: [37, 39],
@@ -786,9 +785,8 @@ function build_and_run_experiment() {
                 // store timeline variables in data for access in the manipulation check procedure
                 data.color1 = jsPsych.timelineVariable('color1', true);
                 data.color2 = jsPsych.timelineVariable('color2', true);
-                data.practice = jsPsych.timelineVariable('practice', true),
-                data.block = jsPsych.timelineVariable('block', true)
-                //console.log('data.color1: ' + data.color1)
+                data.practice = jsPsych.timelineVariable('practice', true);
+                data.block = jsPsych.timelineVariable('block', true);
             }
         },
     ]
@@ -882,7 +880,6 @@ function build_and_run_experiment() {
                             let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
                             data.practice = recent_trial.practice;
                             data.block = recent_trial.block;
-                            //console.log('data.color1: ' + data.color1)
                         }
                     }
                 ],
