@@ -25,6 +25,11 @@
     flex-direction: column;
     justify-content: center;
 }
+.boxoutline {
+    outline-offset: 20px;
+    outline: 2px solid red;
+}
+
 .box-middle {
     width: 20px;
     font-size: 48px;
@@ -47,6 +52,46 @@
 .color-b {
     background-color: green;
 }
+
+.color-1 {
+    background-color: forestgreen;
+}
+.color-2 {
+    background-color: blue;
+}
+.color-3 {
+    background-color: blueviolet;
+}
+.color-4 {
+    background-color: tomato;
+}
+.color-5 {
+    background-color: sienna;
+}
+.color-6 {
+    background-color: firebrick;
+}
+
+
+.color-7 {
+    background-color: aqua;
+}
+.color-8 {
+    background-color: lightseagreen;
+}
+.color-9 {
+    background-color: thistle;
+}
+.color-10 {
+    background-color: lightcoral;
+}
+.color-11 {
+    background-color: springgreen;
+}
+.color-12 {
+    background-color: lightskyblue;
+}
+
 .selected {
     /*margin: 20px;*/
     border: 20px solid gray;

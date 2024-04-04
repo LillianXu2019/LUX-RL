@@ -19,6 +19,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js",
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-html-button-response.js",
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-image-keyboard-response.js",
+        task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-video-keyboard-response.js",
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-fullscreen.js",
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-instructions.js",
         task_github + "lib/vendors/jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js",
@@ -94,6 +95,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
         jsPsych.init({
             timeline: g.timeline,
             preload_images: g.preload_images,
+            preload_video: g.preload_videos,
             display_element: 'display_stage',
             on_finish: function (data) {
                 var today = new Date();
