@@ -41,6 +41,7 @@ g.images = [
     "instructions/Slide27.png",
     "instructions/Slide28.png",
     // "instructions/Slide29.png",
+    "instructions/Slide30.png",
     "instructions/Slide31.png",
     // "instructions/Slide32.png",
     "timeout1_nobg.png",
@@ -49,7 +50,7 @@ g.images = [
 
 g.videos = [
     "instructions/task_instructions_lux_v5.mp4",
-    "instructions/manipulation_question_inst.mp4",
+    "instructions/manipulation_question_inst_04042024.mp4",
 ]
 
 g.preload_images=[];
@@ -126,7 +127,7 @@ g.inst = {
 g.manipulation_inst = {
     type: 'video-keyboard-response',
     sources: [
-        g.imageExt + "instructions/manipulation_question_inst.mp4",
+        g.imageExt + "instructions/manipulation_question_inst_04042024.mp4",
     ],
     choices: jsPsych.NO_KEYS,
     controls: true,  // for testing
