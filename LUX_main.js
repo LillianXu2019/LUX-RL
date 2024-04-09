@@ -484,7 +484,7 @@ function build_and_run_experiment() {
                         let box1_color = jsPsych.timelineVariable('color1', true);
                         let box2_color = jsPsych.timelineVariable('color2', true);
                         let attention_side = jsPsych.timelineVariable('attention_side', true);
-                        return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
+                        return display_boxes({attention_side, box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -522,7 +522,15 @@ function build_and_run_experiment() {
                             data.reward = 0;
                         }
                     },
-                    trial_duration: g.response_duration
+                    trial_duration: function() {
+                        /* Remove timeout for the attention check trial since it has extra instructions */
+                        let attention_side = jsPsych.timelineVariable('attention_side', true);
+                        if(attention_side) {
+                            return null;
+                        } else {
+                            return g.response_duration;
+                        }
+                    }
                 },
                 {
                     timeline: [
@@ -551,7 +559,7 @@ function build_and_run_experiment() {
                                 let box1_color = jsPsych.timelineVariable('color1', true);
                                 let box2_color = jsPsych.timelineVariable('color2', true);
                                 let attention_side = jsPsych.timelineVariable('attention_side', true);
-                                return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
+                                return display_boxes({attention_side, box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice});
                             },
                             choices: [37, 39],
                             on_finish: function (data) {
@@ -612,7 +620,7 @@ function build_and_run_experiment() {
                         let box1_color = jsPsych.timelineVariable('color1', true);
                         let box2_color = jsPsych.timelineVariable('color2', true);
                         let attention_side = jsPsych.timelineVariable('attention_side', true);
-                        return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
+                        return display_boxes({attention_side, box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice});
                     },
                     choices: [37, 39],
                     on_start: function() {
@@ -652,7 +660,15 @@ function build_and_run_experiment() {
                         }
 
                     },
-                    trial_duration: g.response_duration
+                    trial_duration: function() {
+                        /* Remove timeout for the attention check trial since it has extra instructions */
+                        let attention_side = jsPsych.timelineVariable('attention_side', true);
+                        if (attention_side) {
+                            return null;
+                        } else {
+                            return g.response_duration;
+                        }
+                    }
                 },
                 {
                     timeline: [
@@ -692,7 +708,7 @@ function build_and_run_experiment() {
                 let box1_color = jsPsych.timelineVariable('color1', true);
                 let box2_color = jsPsych.timelineVariable('color2', true);
                 let attention_side = jsPsych.timelineVariable('attention_side', true);
-                return display_boxes({box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice, attention_side});
+                return display_boxes({attention_side, box1_color, box2_color, val1, val2, opt1Left, reward_total, practice: practice});
             },
             choices: [37, 39],
             on_start: function() {
@@ -809,7 +825,12 @@ function build_and_run_experiment() {
                             '<button class="box ' + color2 + '"></button><h3></h3>'
                         ]
                     },
-                    data: { name: 'betterbox' }
+                    data: function(){
+                        let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                        let current_practice = recent_trial.practice;
+                        let current_block = recent_trial.block;
+                        return { name: 'betterbox', practice: current_practice, block: current_block }
+                    }
             },
 
             {
@@ -856,7 +877,7 @@ function build_and_run_experiment() {
 
                             let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
                             let class1, class2;
-                            if (last_response_button === 0) {
+                            if (last_response_button === '0') {
                                 class1 = 'boxoutline';
                                 class2 = '';
                             } else {
@@ -884,9 +905,22 @@ function build_and_run_experiment() {
                     }
                 ],
                 conditional_function: function() {
+                    // only include this question if BetterBox was previously asked in current block
+                    let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+                    let current_practice = recent_trial.practice;
+                    let current_block = recent_trial.block;
+                    let prompt;
+                    return jsPsych.data.get().filter({
+                        name: 'betterbox',
+                        practice: current_practice,
+                        block: current_block
+                    }).count() > 1;
+
+                    /*
                     // only include this question if BetterBox was previously asked in current phase
                     let current_phase = jsPsych.data.get().last().values()[0].phase;
                     return jsPsych.data.get().filter({name: 'betterbox', phase: current_phase}).count() > 1
+                     */
                 }
             },
             {
