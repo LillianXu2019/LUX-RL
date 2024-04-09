@@ -41,6 +41,7 @@ g.images = [
     "instructions/Slide27.png",
     "instructions/Slide28.png",
     // "instructions/Slide29.png",
+    "instructions/Slide30.png",
     "instructions/Slide31.png",
     // "instructions/Slide32.png",
     "timeout1_nobg.png",
@@ -70,7 +71,9 @@ g.timeline = [];
 // enter full screen
 g.welcome = {
     type: "fullscreen",
-    message: "Now you are entering the full screen mode.<br>",
+    message: "Now you are entering the full screen mode.<be>" +
+        "<p>You will watch a video instruction on the next slide.</p>" +
+        "<p>You can pause or playback if you want to hear it again.</p>",
     button_label: "Click here to proceed.",
     delay_after: 500
 }
@@ -841,7 +844,7 @@ function build_and_run_experiment() {
                         //         {
                         //             prompt: "Last time you said this card wins. Did it switch in the past few turns?",
                         //             name: 'BetterBoxSwitched',
-                        //             options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
+                        //             options: ["Yes. The winning card switched from one color to the other.", "No. The winning card is still the same color card."],
                         //             required: true
                         //         }
                         // ],
