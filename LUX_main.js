@@ -50,7 +50,7 @@ g.images = [
 
 g.videos = [
     "instructions/task_instructions_lux_v5.mp4",
-    "instructions/manipulation_question_inst_04042024.mp4",
+    "instructions/manipulation_question_inst.mp4",
 ]
 
 g.preload_images=[];
@@ -71,7 +71,9 @@ g.timeline = [];
 // enter full screen
 g.welcome = {
     type: "fullscreen",
-    message: "Now you are entering the full screen mode.<br>",
+    message: "Now you are entering the full screen mode.<be>" +
+        "<p>You will watch a video instruction on the next slide.</p>" +
+        "<p>You can pause or playback if you want to hear it again.</p>",
     button_label: "Click here to proceed.",
     delay_after: 500
 }
@@ -127,7 +129,7 @@ g.inst = {
 g.manipulation_inst = {
     type: 'video-keyboard-response',
     sources: [
-        g.imageExt + "instructions/manipulation_question_inst_04042024.mp4",
+        g.imageExt + "instructions/manipulation_question_inst.mp4",
     ],
     choices: jsPsych.NO_KEYS,
     controls: true,  // for testing
