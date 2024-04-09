@@ -821,7 +821,7 @@ function build_and_run_experiment() {
                         //         {
                         //             prompt: "Last time you said this card wins. Did it switch in the past few turns?",
                         //             name: 'BetterBoxSwitched',
-                        //             options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
+                        //             options: ["Yes. The winning card switched from one color to the other.", "No. The winning card is still the same color card."],
                         //             required: true
                         //         }
                         // ],
