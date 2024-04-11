@@ -51,6 +51,7 @@ g.images = [
 g.videos = [
     "instructions/task_instructions_lux_v5.mp4",
     "instructions/manipulation_question_inst.mp4",
+    "instructions/post_practice_inst.mp4",
 ]
 
 g.preload_images=[];
@@ -139,12 +140,22 @@ g.manipulation_inst = {
 g.timeline.push(g.inst);
 
 g.inst_postPractice = {
-type: 'instructions',
-pages: [
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide30.png"></img>',
-    '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>'],
-    show_clickable_nav: true
+    type: 'video-keyboard-response',
+    sources: [
+        g.imageExt + "instructions/post_practice_inst.mp4"
+    ],
+    choices: jsPsych.NO_KEYS,
+    controls: true,  // for testing
+    trial_ends_after_video: true
 };
+
+// g.inst_postPractice = {
+// type: 'instructions',
+// pages: [
+//     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide30.png"></img>',
+//     '<img class="instructions-image" src="' + g.repo_site + 'images/instructions/Slide31.png"></img>'],
+//     show_clickable_nav: true
+// };
     
 // experiment constants
 // Set the following to true to enable Pavlovia
