@@ -1071,6 +1071,18 @@ function build_and_run_experiment() {
             g.timeline.push(g.trophy); // trophy slide
         }
     }
+
+    var exit_fullscreen = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: false,
+        delay_after: 0
+    }
+    
+    var trial_after_fullscreen = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: 'This trial will NOT be in fullscreen mode.',
+        choices: ['Continue']
+    }
 }
 
     
