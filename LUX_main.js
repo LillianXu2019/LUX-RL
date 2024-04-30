@@ -1046,46 +1046,31 @@ function build_and_run_experiment() {
     blocks = [0, 20, 35, 55, 70, 90, 105, 125, 140, 160, 175];
 
     // introduce the first block
-    // g.timeline.push(g.start_a_first_block);
+    g.timeline.push(g.start_a_first_block);
 
-    // for (let i=1; i < blocks.length; i++){
-    //     g.timeline.push({
-    //         timeline: trial,
-    //         timeline_variables: box_vals.slice(blocks[i-1], blocks[i]),
-    //         data: { phase: 'test' }
-    //     });
-    //     //timeline.push(manipulation_check_procedure);
-    //     g.timeline.push({
-    //         timeline: [manipulation_check_procedure],
-    //         data: { phase: 'test' }
-    //     });
+    for (let i=1; i < blocks.length; i++){
+        g.timeline.push({
+            timeline: trial,
+            timeline_variables: box_vals.slice(blocks[i-1], blocks[i]),
+            data: { phase: 'test' }
+        });
+        //timeline.push(manipulation_check_procedure);
+        g.timeline.push({
+            timeline: [manipulation_check_procedure],
+            data: { phase: 'test' }
+        });
 
-    //     if(block_breaks.includes(blocks[i])){
-    //         // time to take a break
-    //         g.timeline.push(g.take_a_break);
-    //         // time to introduce to a new block
-    //         g.timeline.push(g.start_a_new_block);
-    //     }
+        if(block_breaks.includes(blocks[i])){
+            // time to take a break
+            g.timeline.push(g.take_a_break);
+            // time to introduce to a new block
+            g.timeline.push(g.start_a_new_block);
+        }
 
-    //     if(i === blocks.length-1){
-    //         g.timeline.push(g.trophy); // trophy slide
-    //     }
-    // }
-
-    var exit_fullscreen = {
-        type: jsPsychFullscreen,
-        fullscreen_mode: false,
-        delay_after: 0
+        if(i === blocks.length-1){
+            g.timeline.push(g.trophy); // trophy slide
+        }
     }
-    
-    var trial_after_fullscreen = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: 'This trial will NOT be in fullscreen mode.',
-        choices: ['Continue']
-    }
-
-    g.timeline.push(g.exit_fullscreen);
-    g.timeline.push(g.trial_after_fullscreen);
 }
 
     
