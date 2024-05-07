@@ -88,7 +88,7 @@ g.take_a_break = {
 
 g.start_a_new_block = {
     type: "html-keyboard-response",
-    stimulus: 'Now you are playing a different game. Figure out which game it is to help you find the better card.',
+    stimulus: 'Now you are playing a different game. Find out which color card usually wins to get the most stars.',
     prompt: "Press any key when you're ready to continue",
     on_start: function(){
         setBackgroundColorWhite();
@@ -97,7 +97,7 @@ g.start_a_new_block = {
 
 g.start_a_first_block = {
     type: "html-keyboard-response",
-    stimulus: 'Figure out which game it is to help you find the better card.',
+    stimulus: 'Find out which color card usually wins to get the most stars.',
     prompt: "Press any key when you're ready to continue",
     on_start: function(){
         setBackgroundColorWhite();
