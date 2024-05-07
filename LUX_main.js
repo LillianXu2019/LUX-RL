@@ -849,96 +849,96 @@ function build_and_run_experiment() {
                     }
             },
 
-            {
-                timeline: [
-                    {
-                        type: 'survey-multi-choice',
-                        // questions: [
-                        //         {
-                        //             prompt: "Last time you said this card wins. Did it switch in the past few turns?",
-                        //             name: 'BetterBoxSwitched',
-                        //             options: ["Yes. The winning card switched from one color to the other.", "No. The winning card is still the same color card."],
-                        //             required: true
-                        //         }
-                        // ],
+            // {
+            //     timeline: [
+            //         {
+            //             type: 'survey-multi-choice',
+            //             // questions: [
+            //             //         {
+            //             //             prompt: "Last time you said this card wins. Did it switch in the past few turns?",
+            //             //             name: 'BetterBoxSwitched',
+            //             //             options: ["Yes. The winning card switched from one color to the other.", "No. The winning card is still the same color card."],
+            //             //             required: true
+            //             //         }
+            //             // ],
 
-                        questions: function(){
-                          // simplify question for the first time it appears in a block
-                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
-                            let current_practice = recent_trial.practice;
-                            let current_block = recent_trial.block;
-                            let prompt;
-                            if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() > 1) {
-                                // this is not the first time these questions have appeared in this block
-                                prompt = "Last time you said this card wins. Did it switch in the past few turns?"
-                            } else {
-                                // this is the first time these questions have appeared in this block, so simplify
-                                prompt = "Did the winning card switch in the past few turns?"
-                            }
-                            return [
-                                {
-                                    prompt: prompt,
-                                    name: 'BetterBoxSwitched',
-                                    options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
-                                    required: true
-                                }
-                            ]
+            //             questions: function(){
+            //               // simplify question for the first time it appears in a block
+            //                 let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+            //                 let current_practice = recent_trial.practice;
+            //                 let current_block = recent_trial.block;
+            //                 let prompt;
+            //                 if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() > 1) {
+            //                     // this is not the first time these questions have appeared in this block
+            //                     prompt = "Last time you said this card wins. Did it switch in the past few turns?"
+            //                 } else {
+            //                     // this is the first time these questions have appeared in this block, so simplify
+            //                     prompt = "Did the winning card switch in the past few turns?"
+            //                 }
+            //                 return [
+            //                     {
+            //                         prompt: prompt,
+            //                         name: 'BetterBoxSwitched',
+            //                         options: ["Yes. The winning card switched", "No. The winning card is still the same color card."],
+            //                         required: true
+            //                     }
+            //                 ]
 
-                        },
+            //             },
 
-                        preamble: function(){
-                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
-                            let color1 = recent_trial.color1;
-                            let color2 = recent_trial.color2;
+            //             preamble: function(){
+            //                 let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+            //                 let color1 = recent_trial.color1;
+            //                 let color2 = recent_trial.color2;
 
-                            let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
-                            let class1, class2;
-                            if (last_response_button === '0') {
-                                class1 = 'boxoutline';
-                                class2 = '';
-                            } else {
-                                class1 = '';
-                                class2 = 'boxoutline';
-                            }
+            //                 let last_response_button = jsPsych.data.get().filter({name: 'betterbox'}).last(2).first().values()[0].button_pressed
+            //                 let class1, class2;
+            //                 if (last_response_button === '0') {
+            //                     class1 = 'boxoutline';
+            //                     class2 = '';
+            //                 } else {
+            //                     class1 = '';
+            //                     class2 = 'boxoutline';
+            //                 }
 
-                            // No box outline if this is the first time the question has been asked in this block.
-                            let current_practice = recent_trial.practice;
-                            let current_block = recent_trial.block;
-                            if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() === 1) {
-                                class1 = '';
-                                class2 = '';
-                            }
+            //                 // No box outline if this is the first time the question has been asked in this block.
+            //                 let current_practice = recent_trial.practice;
+            //                 let current_block = recent_trial.block;
+            //                 if (jsPsych.data.get().filter({name: 'betterbox', practice: current_practice, block: current_block}).count() === 1) {
+            //                     class1 = '';
+            //                     class2 = '';
+            //                 }
 
-                            return '<div class="container"><div class="box '  + class1 + ' ' + color1 + '"></div>' +
-                                '<div class="box ' + class2 + ' ' + color2 + '"></div></div>'
-                        },
-                        on_finish: function(data){
-                            // store block info for access later
-                            let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
-                            data.practice = recent_trial.practice;
-                            data.block = recent_trial.block;
-                        }
-                    }
-                ],
-                conditional_function: function() {
-                    // only include this question if BetterBox was previously asked in current block
-                    let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
-                    let current_practice = recent_trial.practice;
-                    let current_block = recent_trial.block;
-                    let prompt;
-                    return jsPsych.data.get().filter({
-                        name: 'betterbox',
-                        practice: current_practice,
-                        block: current_block
-                    }).count() > 1;
+            //                 return '<div class="container"><div class="box '  + class1 + ' ' + color1 + '"></div>' +
+            //                     '<div class="box ' + class2 + ' ' + color2 + '"></div></div>'
+            //             },
+            //             on_finish: function(data){
+            //                 // store block info for access later
+            //                 let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+            //                 data.practice = recent_trial.practice;
+            //                 data.block = recent_trial.block;
+            //             }
+            //         }
+            //     ],
+            //     conditional_function: function() {
+            //         // only include this question if BetterBox was previously asked in current block
+            //         let recent_trial = jsPsych.data.get().filterCustom(function(trial){ return 'color1' in trial }).last().values()[0];
+            //         let current_practice = recent_trial.practice;
+            //         let current_block = recent_trial.block;
+            //         let prompt;
+            //         return jsPsych.data.get().filter({
+            //             name: 'betterbox',
+            //             practice: current_practice,
+            //             block: current_block
+            //         }).count() > 1;
 
-                    /*
-                    // only include this question if BetterBox was previously asked in current phase
-                    let current_phase = jsPsych.data.get().last().values()[0].phase;
-                    return jsPsych.data.get().filter({name: 'betterbox', phase: current_phase}).count() > 1
-                     */
-                }
-            },
+            //         /*
+            //         // only include this question if BetterBox was previously asked in current phase
+            //         let current_phase = jsPsych.data.get().last().values()[0].phase;
+            //         return jsPsych.data.get().filter({name: 'betterbox', phase: current_phase}).count() > 1
+            //          */
+            //     }
+            // },
             {
                 type: 'star-rating',
                 stimulus: "<p>Based on what you see, how many stars will you get from the winning card?</p>" +
