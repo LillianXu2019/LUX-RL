@@ -49,9 +49,10 @@ g.images = [
     ]
 
 g.videos = [
-    "instructions/task_instructions_lux_v5.mp4",
-    "instructions/manipulation_question_inst.mp4",
-    "instructions/post_practice_inst.mp4",
+    //"instructions/task_instructions_lux_v5.mp4",
+    "instructions/task_instructions_lux_v6.mp4",
+    "instructions/manipulation_question_inst_v2.mp4",
+    "instructions/post_practice_inst_v2.mp4",
 ]
 
 g.preload_images=[];
@@ -120,7 +121,8 @@ g.timeline.push(g.welcome);
 g.inst = {
     type: 'video-keyboard-response',
     sources: [
-        g.imageExt + "instructions/task_instructions_lux_v5.mp4"
+        //g.imageExt + "instructions/task_instructions_lux_v5.mp4"
+        g.imageExt + "instructions/task_instructions_lux_v6.mp4"
     ],
     choices: jsPsych.NO_KEYS,
     controls: true,  // for testing
@@ -130,7 +132,7 @@ g.inst = {
 g.manipulation_inst = {
     type: 'video-keyboard-response',
     sources: [
-        g.imageExt + "instructions/manipulation_question_inst.mp4",
+        g.imageExt + "instructions/manipulation_question_inst_v2.mp4",
     ],
     choices: jsPsych.NO_KEYS,
     controls: true,  // for testing
@@ -142,7 +144,7 @@ g.timeline.push(g.inst);
 g.inst_postPractice = {
     type: 'video-keyboard-response',
     sources: [
-        g.imageExt + "instructions/post_practice_inst.mp4"
+        g.imageExt + "instructions/post_practice_inst_v2.mp4"
     ],
     choices: jsPsych.NO_KEYS,
     controls: true,  // for testing
