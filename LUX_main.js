@@ -337,17 +337,11 @@ function generate_schedules() {
         let box2_val;
         for (let j=0; j < block_list.length; j++) {
             if (flipper) {
-                // introduce variance to the volatile condition
-                let box1_val = randomInt(10, 16);
-                let box2_val = randomInt(5, 10);
-                // box1_val = randomInt(10, 15);
-                // box2_val = box1_val - randomInt(5, 9);
+                box1_val = randomInt(10, 15);
+                box2_val = box1_val - randomInt(5, 9);
             } else {
-                // introduce variance to the volatile condition
-                let box1_val = randomInt(5, 10);
-                let box2_val = randomInt(10, 16);
-                // box2_val = randomInt(10, 15);
-                // box1_val = box2_val - randomInt(5,9);
+                box2_val = randomInt(10, 15);
+                box1_val = box2_val - randomInt(5,9);
             }
             flipper = !flipper;
             for (let i=0; i<block_list[j]; i++){
