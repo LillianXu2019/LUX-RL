@@ -304,66 +304,126 @@ function generate_schedules() {
     g.schedule_stable = generate_stable(get_card_colors(0),35);
     g.practice_stable = generate_stable(get_card_colors(1), 15, true);
 
-    function generate_stochastic(card_colors, n, practice=false){
-        let schedule = []
-        for (let i=0; i<n; i++){
-            let box1_val = randomInt(5, 15);
-            let box2_val = randomInt(0, 10);
-            if (practice) {
-                g.max_practice_points += Math.max(box1_val, box2_val);
-            } else {
-                g.max_possible_points += Math.max(box1_val, box2_val);
-            }
-            schedule.push({
-                block: 'stochastic',
-                magOpt1: box1_val,
-                magOpt2: box2_val,
-                opt1Left: d3.randomBernoulli(0.5)(),
-                practice: practice,
-                color1: card_colors[0],
-                color2: card_colors[1],
-                attention_side: ''
-            });
+    function generate_stochastic(card_colors, n, practice=false) {
+    let schedule = [];
+    for (let i = 0; i < n; i++) {
+        let box1_val = randomInt(7, 15);
+        let box2_val = randomInt(0, 8);
+        if (practice) {
+            g.max_practice_points += Math.max(box1_val, box2_val);
+        } else {
+            g.max_possible_points += Math.max(box1_val, box2_val);
         }
-        return schedule;
+        schedule.push({
+            block: 'stochastic',
+            magOpt1: box1_val,
+            magOpt2: box2_val,
+            opt1Left: Math.random() < 0.5,
+            practice: practice,
+            color1: card_colors[0],
+            color2: card_colors[1],
+            attention_side: ''
+        });
     }
+    return schedule;
+}
+
+    // function generate_stochastic(card_colors, n, practice=false){
+    //     let schedule = []
+    //     for (let i=0; i<n; i++){
+    //         let box1_val = randomInt(5, 15);
+    //         let box2_val = randomInt(0, 10);
+    //         if (practice) {
+    //             g.max_practice_points += Math.max(box1_val, box2_val);
+    //         } else {
+    //             g.max_possible_points += Math.max(box1_val, box2_val);
+    //         }
+    //         schedule.push({
+    //             block: 'stochastic',
+    //             magOpt1: box1_val,
+    //             magOpt2: box2_val,
+    //             opt1Left: d3.randomBernoulli(0.5)(),
+    //             practice: practice,
+    //             color1: card_colors[0],
+    //             color2: card_colors[1],
+    //             attention_side: ''
+    //         });
+    //     }
+    //     return schedule;
+    // }
     g.schedule_stochastic = generate_stochastic(get_card_colors(2), 70);
     g.practice_stochastic = generate_stochastic(get_card_colors(3),15, true);
 
-    function generate_volatile(card_colors, block_list, practice=false){
-        let schedule = [];
-        let flipper = true;
-        let box1_val;
-        let box2_val;
-        for (let j=0; j < block_list.length; j++) {
-            if (flipper) {
-                box1_val = randomInt(10, 15);
-                box2_val = box1_val - randomInt(5, 9);
-            } else {
-                box2_val = randomInt(10, 15);
-                box1_val = box2_val - randomInt(5,9);
-            }
-            flipper = !flipper;
-            for (let i=0; i<block_list[j]; i++){
-                if (practice) {
-                    g.max_practice_points += Math.max(box1_val, box2_val);
-                } else {
-                    g.max_possible_points += Math.max(box1_val, box2_val);
-                }
-                schedule.push({
-                    block: 'volatile',
-                    magOpt1: box1_val,
-                    magOpt2: box2_val,
-                    opt1Left: d3.randomBernoulli(0.5)(),
-                    practice: practice,
-                    color1: card_colors[0],
-                    color2: card_colors[1],
-                    attention_side: ''
-                });
-            }
-        }
-        return schedule;
-    }
+    function generate_volatile(card_colors, block_list, practice=false) {
+     let schedule = [];
+     let flipper = true;
+     for (let j = 0; j < block_list.length; j++) {
+         for (let i = 0; i < block_list[j]; i++) {
+             let box1_val;
+             let box2_val;
+             if (flipper) {
+                 // introduce variance to the volatile condition
+                 box1_val = randomInt(11, 15); // Modified range
+                 box2_val = randomInt(5, 9);  // Modified range
+             } else {
+                 // introduce variance to the volatile condition
+                 box1_val = randomInt(5, 9);  // Modified range
+                 box2_val = randomInt(11, 15); // Modified range
+             }
+             if (practice) {
+                 g.max_practice_points += Math.max(box1_val, box2_val);
+             } else {
+                 g.max_possible_points += Math.max(box1_val, box2_val);
+             }
+             schedule.push({
+                 block: 'volatile',
+                 magOpt1: box1_val,
+                 magOpt2: box2_val,
+                 opt1Left: Math.random() < 0.5,
+                 practice: practice,
+                 color1: card_colors[0],
+                 color2: card_colors[1],
+                 attention_side: ''
+             });
+         }
+         flipper = !flipper; // Flipper logic remains outside the inner loop
+     }
+     return schedule;
+ }
+    // function generate_volatile(card_colors, block_list, practice=false){
+    //     let schedule = [];
+    //     let flipper = true;
+    //     let box1_val;
+    //     let box2_val;
+    //     for (let j=0; j < block_list.length; j++) {
+    //         if (flipper) {
+    //             box1_val = randomInt(10, 15);
+    //             box2_val = box1_val - randomInt(5, 9);
+    //         } else {
+    //             box2_val = randomInt(10, 15);
+    //             box1_val = box2_val - randomInt(5,9);
+    //         }
+    //         flipper = !flipper;
+    //         for (let i=0; i<block_list[j]; i++){
+    //             if (practice) {
+    //                 g.max_practice_points += Math.max(box1_val, box2_val);
+    //             } else {
+    //                 g.max_possible_points += Math.max(box1_val, box2_val);
+    //             }
+    //             schedule.push({
+    //                 block: 'volatile',
+    //                 magOpt1: box1_val,
+    //                 magOpt2: box2_val,
+    //                 opt1Left: d3.randomBernoulli(0.5)(),
+    //                 practice: practice,
+    //                 color1: card_colors[0],
+    //                 color2: card_colors[1],
+    //                 attention_side: ''
+    //             });
+    //         }
+    //     }
+    //     return schedule;
+    // }
 
     g.schedule_volatile = generate_volatile(get_card_colors(4),[20, 15, 20, 15]);
     g.practice_volatile = generate_volatile(get_card_colors(5),[8, 7], true);
