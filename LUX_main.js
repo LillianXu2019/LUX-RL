@@ -380,7 +380,7 @@ function generate_schedules() {
                  block: 'volatile',
                  magOpt1: box1_val,
                  magOpt2: box2_val,
-                 opt1Left: Math.random() < 0.5,
+                 opt1Left: d3.randomBernoulli(0.5)(),
                  practice: practice,
                  color1: card_colors[0],
                  color2: card_colors[1],
@@ -426,7 +426,19 @@ function generate_schedules() {
     //     return schedule;
     // }
 
-    g.schedule_volatile = generate_volatile(get_card_colors(4),[20, 15, 20, 15]);
+    // For the volatile condition, use 6 reward flips, each randomly falling within the ranges of
+    // (10, 20), (20, 30), (30, 40), (40, 50), (50, 60), and (60, 70); brackets are exclusive.
+    g.volatile_block_ends = [0];
+    for (let i=0;i<6;i++){
+        g.volatile_block_ends.push(10 * (i + 1) + Math.ceil(Math.random() * 9));
+    }
+    g.volatile_block_ends.push(70);
+    g.volatile_block_list = [];
+    for (let i=1;i<g.volatile_block_ends.length;i++){
+        g.volatile_block_list.push(g.volatile_block_ends[i] - g.volatile_block_ends[i-1]);
+    }
+
+    g.schedule_volatile = generate_volatile(get_card_colors(4), g.volatile_block_list);    //[20, 15, 20, 15]);
     g.practice_volatile = generate_volatile(get_card_colors(5),[8, 7], true);
 
 }
